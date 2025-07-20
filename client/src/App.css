@@ -1,0 +1,70 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+:root {
+  --color-text: #1e293b;
+  --color-muted: #6b7280;
+  --color-bg: #ffffff;
+  --color-bg-section: #ffffff;
+  --color-bg-main: #121212;
+  --color-link: #0077b6;
+  --color-header-bg: #121212;
+  --color-header-text: #ffffff;
+  --color-border: #e2e8f0;
+  --color-shadow: rgba(0, 0, 0, 0.05);
+  --color-section-shadow: rgba(0, 0, 0, 0.04);
+  --color-toggle: #ccc;
+  --color-toggle-active: #0ea5e9;
+  --color-accent: #3b82f6
+}
+
+body.dark-mode {
+  --color-text: #121212;
+  --color-muted: #94a3b8;
+  --color-bg: #121212;
+  --color-bg-section: #1e293b;
+  --color-bg-main: #121212;
+  --color-link: #38bdf8;
+  --color-border: #334155;
+  --color-shadow: rgba(0, 0, 0, 0.3);
+  --color-section-shadow: rgba(0, 0, 0, 0.3);
+}
+
+@media (prefers-color-scheme: dark) {
+  body:not(.light-mode) {
+    --color-text: #121212;
+    --color-muted: #94a3b8;
+    --color-bg: #121212;
+    --color-bg-section: #1e293b;
+    --color-bg-main: #121212;
+    --color-link: #38bdf8;
+    --color-border: #334155;
+    --color-shadow: rgba(0, 0, 0, 0.3);
+    --color-section-shadow: rgba(0, 0, 0, 0.3);
+  }
+}
+
+html, body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background-color: var(--color-bg);
+  color: var(--color-text);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+a {
+  color: var(--color-link);
+  text-decoration: none;
+}
+
+a:hover {
+  text-decoration: underline;
+}
+
+.app-container {
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+}
