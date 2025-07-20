@@ -7,7 +7,7 @@ namespace DiscogsProxy.Controllers;
 [Route("api/[controller]")]
 public class ImportController(IImportService importService) : ControllerBase
 {
-    private IImportService _importService = importService;
+    private readonly IImportService _importService = importService;
 
     [HttpGet("")]
     public async Task<ActionResult> ImportDataset()
@@ -18,14 +18,14 @@ public class ImportController(IImportService importService) : ControllerBase
 
         if (collectionImport.HasError)
         {
-            return Problem("Error in importing Collection");
+            return Problem("Error importing Collection");
         }
 
         var wantlistImport = await _importService.ImportWantlist();
 
         if (wantlistImport.HasError)
         {
-            return Problem("Error in importing Wantlist");
+            return Problem("Error importing Wantlist");
         }
 
         return Ok("Data imported!");

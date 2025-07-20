@@ -1,5 +1,4 @@
 using DiscogsProxy.Services;
-using DiscogsProxy.Workers;
 using Microsoft.AspNetCore.Mvc;
 
 namespace DiscogsProxy.Controllers;
@@ -8,7 +7,7 @@ namespace DiscogsProxy.Controllers;
 [Route("api/[controller]")]
 public class WantlistController(IWantListService wantListService) : ControllerBase
 {
-    private IWantListService _wantListService = wantListService;
+    private readonly IWantListService _wantListService = wantListService;
 
     [HttpGet("")]
     public ActionResult GetWantlist()

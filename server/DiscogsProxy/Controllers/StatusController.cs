@@ -8,7 +8,7 @@ namespace DiscogsProxy.Controllers;
 [Route("api/[controller]")]
 public class StatusController(IStatusService statusService) : ControllerBase
 {
-    private IStatusService _statusService = statusService;
+    private readonly IStatusService _statusService = statusService;
 
     [HttpGet("")]
     public ActionResult GetStatus()

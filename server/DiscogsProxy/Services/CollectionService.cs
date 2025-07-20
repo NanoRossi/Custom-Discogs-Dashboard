@@ -15,10 +15,29 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
     private readonly IDiscogsApiHelper _apiHelper = apiHelper;
 
     /// <summary>
-    /// Get a random item from the collection
+    /// Get a random vinyl from the collection
     /// </summary>
     /// <returns></returns>
-    public async Task<ResultObject<CollectionItem>> GetRandomCollectionItem()
+    public async Task<ResultObject<CollectionItem>> GetRandomCollectionVinyl()
+    {
+        return await GetRandomCollectionItem("Vinyl");
+    }
+
+    /// <summary>
+    /// Get a random CD from the collection
+    /// </summary>
+    /// <returns></returns>
+    public async Task<ResultObject<CollectionItem>> GetRandomCollectionCD()
+    {
+        return await GetRandomCollectionItem("CD");
+    }
+
+    /// <summary>
+    /// Get a random item from the collection table
+    /// </summary>
+    /// <param name="itemType"></param>
+    /// <returns></returns>
+    private async Task<ResultObject<CollectionItem>> GetRandomCollectionItem(string itemType)
     {
         var result = new ResultObject<CollectionItem>();
 
@@ -28,14 +47,38 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
             return result;
         }
 
-        int count = await _context.Collection.CountAsync();
+        int count = await _context.Collection.Where(x => x.FormatType == itemType).CountAsync();
 
         int index = new Random().Next(count);
 
         // Get a random value
         result.Result = await _context.Collection
+            .Where(x => x.FormatType == itemType)
             .Skip(index)
             .FirstOrDefaultAsync();
+
+        return result;
+    }
+
+    /// <summary>
+    /// Get the most recent additions to the collection
+    /// </summary>
+    /// <param name="numOfItems"></param>
+    /// <returns></returns>
+    public async Task<ResultObject<List<CollectionItem>>> GetRecentAdditions(int numOfItems)
+    {
+        var result = new ResultObject<List<CollectionItem>>();
+
+        if (_context.Collection.Count() == 0)
+        {
+            result.Error = new Exception("No collection available");
+            return result;
+        }
+
+        result.Result = await _context.Collection
+            .OrderByDescending(c => c.DateAdded)
+            .Take(numOfItems)
+            .ToListAsync();
 
         return result;
     }
@@ -108,10 +151,23 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
 public interface ICollectionService
 {
     /// <summary>
-    /// Get a random item from the collection
+    /// Get a random vinyl from the collection
     /// </summary>
     /// <returns></returns>
-    Task<ResultObject<CollectionItem>> GetRandomCollectionItem();
+    Task<ResultObject<CollectionItem>> GetRandomCollectionVinyl();
+
+    /// <summary>
+    /// Get a random CD from the collection
+    /// </summary>
+    /// <returns></returns>
+    Task<ResultObject<CollectionItem>> GetRandomCollectionCD();
+
+    /// <summary>
+    /// Get the most recent additions to the collection
+    /// </summary>
+    /// <param name="numOfItems"></param>
+    /// <returns></returns>
+    Task<ResultObject<List<CollectionItem>>> GetRecentAdditions(int numOfItems);
 
     /// <summary>
     /// Call the Discogs API and get all items in the user's collection

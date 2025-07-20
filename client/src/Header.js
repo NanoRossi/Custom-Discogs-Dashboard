@@ -2,7 +2,7 @@ function Header({ username, darkMode, setDarkMode }) {
   return (
     <header>
       <div className="header-content">
-        <h1>{username} Discogs Intergrator</h1>
+        <h1>{username} Discogs Integrator</h1>
         <div className="dark-mode-toggle">
           <label>Dark Mode:</label>
           <label className="switch">

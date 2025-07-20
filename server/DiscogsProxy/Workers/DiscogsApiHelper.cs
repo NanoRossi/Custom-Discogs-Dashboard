@@ -58,21 +58,21 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
 
         Parallel.ForEach(allItems, itemNode =>
         {
-            int id = itemNode.GetProperty<int>("id");
+            int id = itemNode.GetPropertyValue<int>("id");
 
             var release = new T()
             {
                 Id = id,
                 // TODO artists is an array so we need to handle this
                 // Double check data for an example of this
-                ArtistName = itemNode.GetNestedValue<string>("basic_information", "artists", "0", "name"),
-                ReleaseName = itemNode.GetNestedValue<string>("basic_information", "title"),
-                ReleaseYear = itemNode.GetNestedValue<int>("basic_information", "year"),
-                DateAdded = itemNode.GetNestedValue<DateTime>("date_added"),
-                Thumbnail = itemNode.GetNestedValue<Uri>("basic_information", "thumb"),
-                Genres = itemNode.GetNestedValue<List<string>>("basic_information", "genres"),
-                Styles = itemNode.GetNestedValue<List<string>>("basic_information", "styles"),
-                FormatType = GetFormat(itemNode.GetNestedValue<JsonArray>("basic_information", "formats")!)
+                ArtistName = itemNode.GetPropertyValue<string>("basic_information", "artists", "0", "name"),
+                ReleaseName = itemNode.GetPropertyValue<string>("basic_information", "title"),
+                ReleaseYear = itemNode.GetPropertyValue<int>("basic_information", "year"),
+                DateAdded = itemNode.GetPropertyValue<DateTime>("date_added"),
+                Thumbnail = itemNode.GetPropertyValue<Uri>("basic_information", "thumb"),
+                Genres = itemNode.GetPropertyValue<List<string>, string>("basic_information", "genres"),
+                Styles = itemNode.GetPropertyValue<List<string>, string>("basic_information", "styles"),
+                FormatType = GetFormat(itemNode.GetPropertyValue<JsonArray>("basic_information", "formats")!)
             };
 
             bag.TryAdd(id, release);
@@ -97,7 +97,7 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
 
         foreach (var node in formats)
         {
-            var type = node.GetNestedValue<string>("name");
+            var type = node.GetPropertyValue<string>("name");
 
             // This seeems to appear on some items, potentially an internal tag?
             // Regardless, we want something like "Vinyl" or "CD"

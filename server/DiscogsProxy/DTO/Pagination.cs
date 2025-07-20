@@ -1,22 +1,15 @@
 using System.Text.Json.Nodes;
+using DiscogsProxy.Workers;
 
 namespace DiscogsProxy.DTO;
 
-public class Pagination
+public class Pagination(JsonNode? input)
 {
-    public Pagination(JsonNode? input)
-    {
-        this.Page = Convert.ToInt16(input.GetProperty<int>("page"));
-        this.Pages = Convert.ToInt16(input.GetProperty<int>("pages"));
-        this.Per_Page = Convert.ToInt16(input.GetProperty<int>("per_page"));
-        this.Items = Convert.ToInt16(input.GetProperty<int>("items"));
-    }
+    public int Page { get; set; } = Convert.ToInt16(input.GetPropertyValue<int>("page"));
 
-    public int Page { get; set; }
+    public int Pages { get; set; } = Convert.ToInt16(input.GetPropertyValue<int>("pages"));
 
-    public int Pages { get; set; }
+    public int Per_Page { get; set; } = Convert.ToInt16(input.GetPropertyValue<int>("per_page"));
 
-    public int Per_Page { get; set; }
-
-    public int Items { get; set; }
+    public int Items { get; set; } = Convert.ToInt16(input.GetPropertyValue<int>("items"));
 }
