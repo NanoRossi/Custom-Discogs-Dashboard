@@ -5,6 +5,16 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowLocalhost3000", policy =>
+    {
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyMethod()
+              .AllowAnyHeader();
+    });
+});
+
 // Add services to the container.
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -18,6 +28,7 @@ builder.Services.AddScoped<ICollectionService, CollectionService>();
 builder.Services.AddScoped<IWantListService, WantListService>();
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<IDiscogsApiHelper, DiscogsApiHelper>();
+builder.Services.AddScoped<IDatabaseChecker, DatabaseChecker>();
 
 // Register EF Core with SQLite
 // TODO: move db file into configuration
@@ -33,6 +44,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+app.UseCors("AllowLocalhost3000");
 app.UseHttpsRedirection();
 app.MapControllers();
 

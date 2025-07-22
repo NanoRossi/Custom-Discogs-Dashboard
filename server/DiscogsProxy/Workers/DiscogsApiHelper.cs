@@ -34,12 +34,14 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     /// </summary>
     /// <param name="response"></param>
     /// <returns></returns>
-    public async Task<JsonObject?> GetJsonObjectFromResponseAsync(HttpResponseMessage response)
+    public async Task<JsonObject> GetJsonObjectFromResponseAsync(HttpResponseMessage response)
     {
         var stream = await response.Content.ReadAsStreamAsync();
         var jsonNode = await JsonNode.ParseAsync(stream);
 
-        return jsonNode as JsonObject;
+        var asObj = jsonNode as JsonObject;
+
+        return asObj!;
     }
 
     /// <summary>
@@ -196,7 +198,7 @@ public interface IDiscogsApiHelper
     /// </summary>
     /// <param name="response"></param>
     /// <returns></returns>
-    Task<JsonObject?> GetJsonObjectFromResponseAsync(HttpResponseMessage response);
+    Task<JsonObject> GetJsonObjectFromResponseAsync(HttpResponseMessage response);
 
     /// <summary>
     /// Convert generic jsonnodes into our Item DTOs

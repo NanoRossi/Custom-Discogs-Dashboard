@@ -2,8 +2,12 @@
 import { useState, useEffect } from 'react';
 import './App.css';
 import './Header.css';
+import './Footer.css'
 
 import Header from './Header';
+import Footer from './Footer';
+import DraggableGrid from './DraggableGrid';
+
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);
@@ -21,9 +25,11 @@ function App() {
   return (
     <div className={`app-container ${darkMode ? 'dark' : ''}`}>
       <Header username="My" darkMode={darkMode} setDarkMode={setDarkMode} />
-      <div className="main-content">
-
-
+      <div className="content-container">
+        <div className="main-content">
+          <DraggableGrid />
+          <Footer />
+        </div>
       </div>
     </div>
   );

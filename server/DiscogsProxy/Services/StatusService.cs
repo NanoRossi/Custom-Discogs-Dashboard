@@ -1,14 +1,17 @@
 using DiscogsProxy.Constants;
 using DiscogsProxy.DTO;
+using DiscogsProxy.Workers;
 
 namespace DiscogsProxy.Services;
 
 /// <summary>
 /// Status Service
 /// </summary>
+/// <param name="dbChecker"></param>
 /// <param name="context"></param>
-public class StatusService(DiscogsContext context) : IStatusService
+public class StatusService(IDatabaseChecker dbChecker, DiscogsContext context) : IStatusService
 {
+    private readonly IDatabaseChecker _dbChecker = dbChecker;
     private readonly DiscogsContext _context = context;
 
     /// <summary>
@@ -19,7 +22,7 @@ public class StatusService(DiscogsContext context) : IStatusService
     {
         var result = new ResultObject<Status>();
 
-        if (!_context.Database.CanConnect())
+        if (!_dbChecker.CanConnect())
         {
             result.Result = new Status(DbStatus.Disconnected);
             return result;

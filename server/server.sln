@@ -5,6 +5,10 @@ VisualStudioVersion = 17.0.31903.59
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DiscogsProxy", "DiscogsProxy\DiscogsProxy.csproj", "{AFA595D9-8ACF-427B-9B49-023C543960D4}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tests", "Tests", "{0C223ACE-6B42-49D5-8FF8-001FFD02F7CF}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "UnitTests", "Tests\UnitTests\UnitTests.csproj", "{A95DF331-19E3-468C-8563-E6950D3129B4}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +22,12 @@ Global
 		{AFA595D9-8ACF-427B-9B49-023C543960D4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AFA595D9-8ACF-427B-9B49-023C543960D4}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{AFA595D9-8ACF-427B-9B49-023C543960D4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A95DF331-19E3-468C-8563-E6950D3129B4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A95DF331-19E3-468C-8563-E6950D3129B4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A95DF331-19E3-468C-8563-E6950D3129B4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A95DF331-19E3-468C-8563-E6950D3129B4}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A95DF331-19E3-468C-8563-E6950D3129B4} = {0C223ACE-6B42-49D5-8FF8-001FFD02F7CF}
 	EndGlobalSection
 EndGlobal

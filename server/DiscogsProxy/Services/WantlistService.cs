@@ -86,7 +86,8 @@ public class WantListService(DiscogsContext context, IDiscogsApiHelper apiHelper
 
         if (!response.IsSuccessStatusCode)
         {
-            result.Error = new Exception($"Error from Discogs collection API: {response.Content.ReadAsStreamAsync().Result}");
+            var errorContent = await response.Content.ReadAsStringAsync();
+            result.Error = new Exception($"Error from Discogs collection API: {errorContent}");
             return result;
         }
 

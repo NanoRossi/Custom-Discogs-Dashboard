@@ -1,6 +1,4 @@
-using DiscogsProxy.Constants;
 using DiscogsProxy.DTO;
-using DiscogsProxy.Workers;
 
 namespace DiscogsProxy.Services;
 

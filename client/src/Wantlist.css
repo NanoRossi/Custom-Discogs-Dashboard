@@ -1,0 +1,63 @@
+.wantlist-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding: 0.05rem;
+  background-color: var(--color-bg-main);
+  color: var(--color-text);
+}
+
+.wantlist-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3rem;
+}
+
+.wantlist-scroll {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.3rem;
+}
+
+.wantlist-entry {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.wantlist-entry img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 6px;
+}
+
+.wantlist-scroll::-webkit-scrollbar {
+  width: 8px;
+}
+
+.wantlist-scroll::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.wantlist-scroll::-webkit-scrollbar-thumb {
+  background-color: var(--color-muted);
+  border-radius: 6px;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+.wantlist-scroll::-webkit-scrollbar-thumb:hover {
+  background-color: var(--color-accent);
+}
+
+.wantlist-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-muted) transparent;
+}
