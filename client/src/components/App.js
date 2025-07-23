@@ -1,13 +1,10 @@
 // App.js
 import { useState, useEffect } from 'react';
-import './App.css';
-import './Header.css';
-import './Footer.css'
+import '../css/App.css';
 
 import Header from './Header';
 import Footer from './Footer';
 import DraggableGrid from './DraggableGrid';
-
 
 function App() {
   const [darkMode, setDarkMode] = useState(false);

@@ -72,6 +72,7 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
                 ReleaseYear = itemNode.GetPropertyValue<int>("basic_information", "year"),
                 DateAdded = itemNode.GetPropertyValue<DateTime>("date_added"),
                 Thumbnail = itemNode.GetPropertyValue<Uri>("basic_information", "thumb"),
+                CoverImage = itemNode.GetPropertyValue<Uri>("basic_information", "cover_image"),
                 Genres = itemNode.GetPropertyValue<List<string>, string>("basic_information", "genres"),
                 Styles = itemNode.GetPropertyValue<List<string>, string>("basic_information", "styles"),
                 FormatType = GetFormat(itemNode.GetPropertyValue<JsonArray>("basic_information", "formats")!)

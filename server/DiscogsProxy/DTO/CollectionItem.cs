@@ -40,6 +40,11 @@ public class Item
     public Uri? Thumbnail { get; set; }
 
     /// <summary>
+    /// Cover Image - Higher res Thumb
+    /// </summary>
+    public Uri? CoverImage { get; set; }
+
+    /// <summary>
     /// Genres
     /// </summary>
     public List<string>? Genres { get; set; }

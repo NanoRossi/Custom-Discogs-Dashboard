@@ -1,17 +1,17 @@
 import { useEffect, useState } from "react";
-import "./Wantlist.css";
+import "../css/ListEntries.css";
 
-export default function WantlistItem() {
+export default function ListEntries({ title, apiCall }) {
     const [wantlist, setWantlist] = useState([]);
 
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/wantlist`);
+                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${apiCall}`);
                 const data = await res.json();
                 setWantlist(data);
             } catch (err) {
-                console.error("Failed to fetch wantlist", err);
+                console.error(`Failed to fetch ${title}`, err);
             }
         };
 
@@ -19,15 +19,16 @@ export default function WantlistItem() {
     }, []);
 
     return (
-        <div className="wantlist-card">
-            <h3 className="wantlist-title">Wantlist</h3>
-            <div className="wantlist-scroll">
+        <div className="item-list-card">
+            <h3 className="item-list-title">{title}</h3>
+            <div className="item-list-scroll">
                 {wantlist.map((item, index) => (
-                    <div className="wantlist-entry" key={index}>
+                    <div className="item-list-entry" key={index}>
                         <img src={item.thumbnail} alt={`${item.artistName} - ${item.releaseName}`} />
                         <div>
                             <strong>{item.artistName}</strong><br />
-                            <span>{item.releaseName}</span>
+                            <span>{item.releaseName}</span><br />
+                            <span>{item.formatType}</span>
                         </div>
                     </div>
                 ))}

@@ -1,3 +1,5 @@
+import '../css/Header.css'
+
 function Header({ username, darkMode, setDarkMode }) {
   return (
     <header>

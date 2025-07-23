@@ -1,0 +1,107 @@
+.item-list-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  padding: 0.05rem;
+  background-color: var(--color-bg-main);
+  color: var(--color-text);
+}
+
+.item-list-title {
+  font-size: 1.2rem;
+  margin-bottom: 0.5rem;
+  font-weight: bold;
+  border-bottom: 1px solid var(--color-border);
+  padding-bottom: 0.3rem;
+}
+
+.item-list-scroll {
+  overflow-y: auto;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+  padding-right: 0.3rem;
+}
+
+.item-list-entry {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+  font-size: 0.9rem;
+}
+
+.fetch-button {
+    margin-top: auto;
+    margin-bottom: 0.5rem;
+    padding: 0.5rem 1rem;
+    background-color: var( --color-accent);
+    color: white;
+    border: none;
+    border-radius: 20px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.fetch-button:disabled {
+    background-color: #999;
+    cursor: not-allowed;
+}
+
+.item-container {
+    opacity: 0;
+    max-height: 0;
+    overflow: hidden;
+    transition: opacity 0.5s ease, max-height 0.5s ease;
+}
+
+.item-container.visible {
+    opacity: 1;
+    max-height: 1000px;
+}
+
+.item-entry {
+  display: flex;
+  gap: 0.75rem;
+  align-items: left;
+  font-size: 1.5rem;
+}
+
+.item-entry span {
+  color: var(--color-muted);
+}
+
+.item-entry img {
+  width: 250px;
+  height: 250px;
+  object-fit: fill;
+  border-radius: 6px;
+}
+
+.loader {
+    margin-top: 1rem;
+    width: 40px;
+    height: 40px;
+    border: 5px solid #ccc;
+    border-top: 5px solid #007acc;
+    border-radius: 50%;
+    animation: spin 1s linear infinite;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.fade {
+    opacity: 0;
+    transition: opacity 1s ease;
+}
+
+.fade.visible {
+    opacity: 1;
+}
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
