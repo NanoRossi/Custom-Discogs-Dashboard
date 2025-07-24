@@ -13,6 +13,8 @@ public class Status
     {
         this.CollectionCount = context.Collection.Count();
         this.WantlistCount = context.Wantlist.Count();
+        this.GenreCount = context.Genres.Count();
+        this.StyleCount = context.Styles.Count();
         this.DatabaseStatus = (CollectionCount > 0 && WantlistCount > 0) ? DbStatus.Active : DbStatus.Empty;
     }
 
@@ -21,4 +23,8 @@ public class Status
     public int? CollectionCount { get; set; }
 
     public int? WantlistCount { get; set; }
+
+    public int? GenreCount { get; set; }
+
+    public int? StyleCount { get; set; }
 }

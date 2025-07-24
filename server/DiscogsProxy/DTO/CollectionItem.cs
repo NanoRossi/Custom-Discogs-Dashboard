@@ -15,9 +15,9 @@ public class Item
     public int Id { get; set; }
 
     /// <summary>
-    /// ArtistName
+    /// ArtistNames
     /// </summary>
-    public string? ArtistName { get; set; }
+    public List<string>? ArtistName { get; set; }
 
     /// <summary>
     /// ReleaseName

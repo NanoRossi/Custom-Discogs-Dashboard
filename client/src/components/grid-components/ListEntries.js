@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import "../css/ListEntries.css";
+import "../../css/ListEntries.css";
 
 export default function ListEntries({ title, apiCall }) {
     const [wantlist, setWantlist] = useState([]);
@@ -16,7 +16,7 @@ export default function ListEntries({ title, apiCall }) {
         };
 
         fetchData();
-    }, []);
+    }, [title, apiCall]);
 
     return (
         <div className="item-list-card">
@@ -24,9 +24,9 @@ export default function ListEntries({ title, apiCall }) {
             <div className="item-list-scroll">
                 {wantlist.map((item, index) => (
                     <div className="item-list-entry" key={index}>
-                        <img src={item.thumbnail} alt={`${item.artistName} - ${item.releaseName}`} />
+                        <img src={item.thumbnail} alt={`${item.artistName.join(', ')} - ${item.releaseName}`} />
                         <div>
-                            <strong>{item.artistName}</strong><br />
+                            <strong>{item.artistName.join(', ')}</strong><br />
                             <span>{item.releaseName}</span><br />
                             <span>{item.formatType}</span>
                         </div>

@@ -79,29 +79,12 @@
   border-radius: 6px;
 }
 
-.loader {
-    margin-top: 1rem;
-    width: 40px;
-    height: 40px;
-    border: 5px solid #ccc;
-    border-top: 5px solid #007acc;
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
-    margin-left: auto;
-    margin-right: auto;
-}
-
 .fade {
     opacity: 0;
-    transition: opacity 1s ease;
+    transition: opacity 0.5s ease;
 }
 
 .fade.visible {
     opacity: 1;
 }
 
-@keyframes spin {
-    to {
-        transform: rotate(360deg);
-    }
-}

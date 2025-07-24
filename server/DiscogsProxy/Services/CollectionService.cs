@@ -118,7 +118,31 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
 
         var mappedReleases = _apiHelper.MapReleases<CollectionItem>(allReleases);
 
+        // populate the genre and styles tables
+        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Genres!), _context.Genres);
+        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Styles!), _context.Styles);
+        await _context.SaveChangesAsync();
+
         return mappedReleases;
+    }
+
+    public async Task HandleMusicInfo<T>(IEnumerable<string> infos, DbSet<T> dbSet)
+    where T : MusicInfo, new()
+    {
+        var infoList = infos.Distinct().ToList();
+
+        var existingInfos = await dbSet
+            .AsNoTracking()
+            .Where(x => infoList.Contains(x.Text!))
+            .Select(x => x.Text)
+            .ToListAsync();
+
+        var newInfos = infoList.Except(existingInfos);
+
+        foreach (var info in newInfos)
+        {
+            dbSet.Add(new T { Text = info });
+        }
     }
 
     /// <summary>

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import "../css/GetItem.css";
+import "../../css/GetItem.css";
 
 export default function GetItem({ title, apiCall }) {
     const [item, setItem] = useState(null);
@@ -14,7 +14,7 @@ export default function GetItem({ title, apiCall }) {
             // Start fade out
             setFadeOut(true);
             setFadeIn(false);
-            await new Promise((resolve) => setTimeout(resolve, 1000));
+            await new Promise((resolve) => setTimeout(resolve, 500));
         }
 
         try {
@@ -58,10 +58,10 @@ export default function GetItem({ title, apiCall }) {
                     <div className={`item-entry fade ${fadeIn ? "visible" : ""} ${fadeOut ? "" : "visible"}`}>
                         <img
                             src={item.coverImage}
-                            alt={`${item.artistName} - ${item.releaseName}`}
+                            alt={`${item.artistName.join(', ')} - ${item.releaseName}`}
                         />
                         <div>
-                            <strong>{item.artistName}</strong><br />
+                            <strong>{item.artistName.join(', ')}</strong><br />
                             <span>{item.releaseName}</span>
                         </div>
                     </div>

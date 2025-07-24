@@ -29,6 +29,7 @@ builder.Services.AddScoped<IWantListService, WantListService>();
 builder.Services.AddScoped<IImportService, ImportService>();
 builder.Services.AddScoped<IDiscogsApiHelper, DiscogsApiHelper>();
 builder.Services.AddScoped<IDatabaseChecker, DatabaseChecker>();
+builder.Services.AddScoped<IInfoService, InfoService>();
 
 // Register EF Core with SQLite
 // TODO: move db file into configuration

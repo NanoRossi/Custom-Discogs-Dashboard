@@ -62,12 +62,18 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
         {
             int id = itemNode.GetPropertyValue<int>("id");
 
+            var artistsNode = itemNode.GetPropertyValue<JsonArray>("basic_information", "artists");
+            List<string> artistNames = [];
+
+            foreach (var node in artistsNode!)
+            {
+                artistNames.Add(node.GetPropertyValue<string>("name")!);
+            }
+
             var release = new T()
             {
                 Id = id,
-                // TODO artists is an array so we need to handle this
-                // Double check data for an example of this
-                ArtistName = itemNode.GetPropertyValue<string>("basic_information", "artists", "0", "name"),
+                ArtistName = artistNames,
                 ReleaseName = itemNode.GetPropertyValue<string>("basic_information", "title"),
                 ReleaseYear = itemNode.GetPropertyValue<int>("basic_information", "year"),
                 DateAdded = itemNode.GetPropertyValue<DateTime>("date_added"),

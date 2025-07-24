@@ -1,27 +1,14 @@
 import { useState, useEffect } from "react";
-import {
-    DndContext,
-    closestCenter,
-    PointerSensor,
-    useSensor,
-    useSensors,
-} from "@dnd-kit/core";
-import {
-    arrayMove,
-    SortableContext,
-    useSortable,
-    rectSortingStrategy,
-} from "@dnd-kit/sortable";
-
-import {
-    restrictToParentElement
-} from '@dnd-kit/modifiers';
-
+import { DndContext, closestCenter, PointerSensor, useSensor, useSensors } from "@dnd-kit/core";
+import { arrayMove, SortableContext, useSortable, rectSortingStrategy } from "@dnd-kit/sortable";
+import { restrictToParentElement } from '@dnd-kit/modifiers';
 import { CSS } from "@dnd-kit/utilities";
 import { FaGripLines } from "react-icons/fa";
-import ListEntries from "./ListEntries";
+
 import "../css/DraggableGrid.css";
-import GetItem from "./GetItem";
+import ListEntries from "./grid-components/ListEntries";
+import GetItem from "./grid-components/GetItem";
+import GetStatus from "./grid-components/GetStatus";
 
 function SortableItem({ id, content }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
@@ -49,9 +36,10 @@ export default function DraggableGrid() {
         { id: "3", content: <GetItem title={"Get Random Record"} apiCall={"api/collection/random/vinyl"} /> },
         { id: "4", content: <GetItem title={"Get Random CD"} apiCall={"api/collection/random/cd"} /> },
         { id: "5", content: "By The Numbers" },
-        { id: "6", content: "Get All For Artist" },
-        { id: "7", content: "Get All For Genre" },
-        { id: "8", content: "Get All For Style" },
+        { id: "6", content: <GetStatus /> },
+        { id: "7", content: "Get All For Artist" },
+        { id: "8", content: "Get All For Genre" },
+        { id: "9", content: "Get All For Style" }
     ];
 
     const [items, setItems] = useState(defaultItems);
@@ -63,7 +51,10 @@ export default function DraggableGrid() {
             const orderedItems = order
                 .map((id) => defaultItems.find((item) => item.id === id))
                 .filter(Boolean);
-            setItems(orderedItems);
+            const missingItems = defaultItems.filter(
+                (item) => !orderedItems.some((oi) => oi.id === item.id)
+            );
+            setItems([...orderedItems, ...missingItems]);
         }
     }, []);
 
@@ -94,7 +85,7 @@ export default function DraggableGrid() {
                 onDragEnd={handleDragEnd}
                 modifiers={[restrictToParentElement]}
             >
-                <SortableContext items={items} strategy={rectSortingStrategy}>
+                <SortableContext items={items.map(item => item.id)} strategy={rectSortingStrategy}>
                     <div className="draggable-grid">
                         {items.map(({ id, content }) => (
                             <SortableItem key={id} id={id} content={content} />
