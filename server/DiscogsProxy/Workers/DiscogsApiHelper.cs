@@ -15,6 +15,8 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     private readonly IHttpClientFactory _httpClientFactory = httpClientFactory;
     private readonly string _userAgent = config["UserAgent"] ?? throw new ArgumentNullException("UserAgent env variable not found");
     private readonly string _token = config["DiscogsToken"] ?? throw new ArgumentNullException("DiscogsToken env variable not found");
+    private readonly string _username = config["DiscogsUsername"] ?? throw new ArgumentNullException("DiscogsUsername env variable not found");
+
 
     /// <summary>
     /// Create a HTTP Client to Discogs using our token
@@ -190,6 +192,31 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
             }
         }
     }
+
+    /// <summary>
+    /// Confirm the configuration is correct to access a profile's data
+    /// </summary>
+    /// <returns></returns>
+    public async Task<bool> ProfileIsValid()
+    {
+        var client = CreateClient();
+
+        var response = await client.GetAsync($"users/{_username}");
+
+        if (!response.IsSuccessStatusCode)
+        {
+            return false;
+        }
+
+        var content = await response.Content.ReadAsStringAsync();
+
+        // if the response doesn't contain email, the username was valid, but the token wasn't
+        if (!content.Contains("email"))
+        {
+            return false;
+        }
+        return true;
+    }
 }
 
 public interface IDiscogsApiHelper
@@ -247,4 +274,10 @@ public interface IDiscogsApiHelper
     Func<HttpClient, string, int, int, Task<ResultObject<HttpResponseMessage>>> getPageFunc,
     JsonArray allReleases,
     string itemPropertyName);
+
+    /// <summary>
+    /// Confirm the configuration is correct to access a profile's data
+    /// </summary>
+    /// <returns></returns>
+    Task<bool> ProfileIsValid();
 }

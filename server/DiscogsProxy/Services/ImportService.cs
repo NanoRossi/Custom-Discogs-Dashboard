@@ -1,4 +1,5 @@
 using DiscogsProxy.DTO;
+using DiscogsProxy.Workers;
 
 namespace DiscogsProxy.Services;
 
@@ -6,9 +7,10 @@ namespace DiscogsProxy.Services;
 /// Import Service
 /// </summary>
 /// <param name="context"></param>
-public class ImportService(DiscogsContext context, IConfiguration config, ICollectionService collectionService, IWantListService wantListService) : IImportService
+public class ImportService(DiscogsContext context, IDiscogsApiHelper apiHelper, IConfiguration config, ICollectionService collectionService, IWantListService wantListService) : IImportService
 {
     private readonly DiscogsContext _context = context;
+    private readonly IDiscogsApiHelper _apiHelper = apiHelper;
     private readonly IConfiguration _config = config;
     private readonly ICollectionService _collectionService = collectionService;
     private readonly IWantListService _wantlistService = wantListService;
@@ -17,10 +19,20 @@ public class ImportService(DiscogsContext context, IConfiguration config, IColle
     /// Recycle the DB
     /// Delete everything and re-build tables from scratch 
     /// </summary>
-    public async void RecycleDb()
+    public async Task<ResultObject<bool>> RecycleDb()
     {
+        var result = new ResultObject<bool>();
+
+        if (!await _apiHelper.ProfileIsValid())
+        {
+            result.Error = new Exception("Invalid profile configuration");
+            return result;
+        }
+
         await _context.Database.EnsureDeletedAsync();
         await _context.Database.EnsureCreatedAsync();
+
+        return result;
     }
 
     /// <summary>
@@ -93,7 +105,7 @@ public interface IImportService
     /// Recycle the DB
     /// Delete everything and re-build tables from scratch 
     /// </summary>
-    void RecycleDb();
+    Task<ResultObject<bool>> RecycleDb();
 
     /// <summary>
     /// Build the collection table by querying Discogs

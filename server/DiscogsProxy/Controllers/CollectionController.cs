@@ -47,4 +47,44 @@ public class CollectionController(ICollectionService collectionService) : Contro
 
         return Ok(collectionImport.Result);
     }
+
+    [HttpGet("getall/artist/{artistName}")]
+    public ActionResult GetAllForArtist(string artistName)
+    {
+        var artistEntries = _collectionService.GetAllForArtist(artistName.Replace("%20", " "));
+
+        if (artistEntries.HasError)
+        {
+            return Problem(artistEntries!.Error!.Message);
+        }
+
+        return Ok(artistEntries.Result);
+    }
+
+    [HttpGet("getall/genre/{genreName}")]
+    public ActionResult GetAllForGenre(string genreName)
+    {
+        var genreEntries = _collectionService.GetAllForGenre(genreName.Replace("%20", " "));
+
+        if (genreEntries.HasError)
+        {
+            return Problem(genreEntries!.Error!.Message);
+        }
+
+        return Ok(genreEntries.Result);
+    }
+
+    [HttpGet("getall/style/{styleName}")]
+    public ActionResult GetAllForStyle(string styleName)
+    {
+        var styleEntries = _collectionService.GetAllForStyle(styleName.Replace("%20", " "));
+
+        if (styleEntries.HasError)
+        {
+            return Problem(styleEntries!.Error!.Message);
+        }
+
+        return Ok(styleEntries.Result);
+    }
+
 }

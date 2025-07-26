@@ -4,11 +4,20 @@ using Microsoft.EntityFrameworkCore;
 
 namespace DiscogsProxy.Services;
 
+/// <summary>
+/// Service to query the DB and get underlying data
+/// </summary>
+/// <param name="discogsContext"></param>
+/// <param name="dbChecker"></param>
 public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbChecker) : IInfoService
 {
     private readonly DiscogsContext _discogsContext = discogsContext;
     private readonly IDatabaseChecker _dbChecker = dbChecker;
 
+    /// <summary>
+    /// Get all artists in the collection
+    /// </summary>
+    /// <returns></returns>
     public ResultObject<List<string>> GetArtists()
     {
         var result = new ResultObject<List<string>>();
@@ -27,6 +36,10 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
         return result;
     }
 
+    /// <summary>
+    /// Get all genres in the collection
+    /// </summary>
+    /// <returns></returns>
     public ResultObject<List<string>> GetGenres()
     {
         var result = new ResultObject<List<string>>();
@@ -43,6 +56,10 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
         return result;
     }
 
+    /// <summary>
+    /// Get all styles in the collection
+    /// </summary>
+    /// <returns></returns>
     public ResultObject<List<string>> GetStyles()
     {
         var result = new ResultObject<List<string>>();
@@ -60,12 +77,26 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
     }
 }
 
+/// <summary>
+/// Interface
+/// </summary>
 public interface IInfoService
 {
-
+    /// <summary>
+    /// Get all artists in the collection
+    /// </summary>
+    /// <returns></returns>
     ResultObject<List<string>> GetArtists();
 
+    /// <summary>
+    /// Get all genres in the collection
+    /// </summary>
+    /// <returns></returns>
     ResultObject<List<string>> GetStyles();
 
+    /// <summary>
+    /// Get all styles in the collection
+    /// </summary>
+    /// <returns></returns>
     ResultObject<List<string>> GetGenres();
 }

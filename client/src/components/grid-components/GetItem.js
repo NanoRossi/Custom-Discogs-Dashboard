@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "../../css/GetItem.css";
 
 export default function GetItem({ title, apiCall }) {
     const [item, setItem] = useState(null);
@@ -53,9 +52,9 @@ export default function GetItem({ title, apiCall }) {
     return (
         <div className="item-list-card">
             <h3 className="item-list-title">{title}</h3>
-            <div className={`item-container ${item ? "visible" : ""}`}>
+            <div className={`single-item-container ${item ? "visible" : ""}`}>
                 {item && (
-                    <div className={`item-entry fade ${fadeIn ? "visible" : ""} ${fadeOut ? "" : "visible"}`}>
+                    <div className={`single-item fade ${fadeIn ? "visible" : ""} ${fadeOut ? "" : "visible"}`}>
                         <img
                             src={item.coverImage}
                             alt={`${item.artistName.join(', ')} - ${item.releaseName}`}

@@ -41,7 +41,7 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
     {
         var result = new ResultObject<CollectionItem>();
 
-        if (_context.Collection.Count() == 0)
+        if (!_context.Collection.Any())
         {
             result.Error = new Exception("No collection available");
             return result;
@@ -167,6 +167,69 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
         result.Result = response;
         return result;
     }
+
+    /// <summary>
+    /// Get all entries for a given artist
+    /// </summary>
+    /// <param name="artistName"></param>
+    /// <returns></returns>
+    public ResultObject<List<CollectionItem>> GetAllForArtist(string artistName)
+    {
+        var result = new ResultObject<List<CollectionItem>>();
+
+        if (string.IsNullOrEmpty(artistName))
+        {
+            result.Error = new Exception("Artist name is invalid");
+            return result;
+        }
+
+        var relevantItems = _context.Collection.AsEnumerable().Where(x => x.ArtistName!.Contains(artistName, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        result.Result = relevantItems;
+        return result;
+    }
+
+    /// <summary>
+    /// Get all entires that are of the entered genre
+    /// </summary>
+    /// <param name="genreName"></param>
+    /// <returns></returns>
+    public ResultObject<List<CollectionItem>> GetAllForGenre(string genreName)
+    {
+        var result = new ResultObject<List<CollectionItem>>();
+
+        if (string.IsNullOrEmpty(genreName))
+        {
+            result.Error = new Exception("Genre name is invalid");
+            return result;
+        }
+
+        var relevantItems = _context.Collection.AsEnumerable().Where(x => x.Genres!.Contains(genreName, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        result.Result = relevantItems;
+        return result;
+    }
+
+    /// <summary>
+    /// Get all entries that are of the entered style
+    /// </summary>
+    /// <param name="styleName"></param>
+    /// <returns></returns>
+    public ResultObject<List<CollectionItem>> GetAllForStyle(string styleName)
+    {
+        var result = new ResultObject<List<CollectionItem>>();
+
+        if (string.IsNullOrEmpty(styleName))
+        {
+            result.Error = new Exception("Style name is invalid");
+            return result;
+        }
+
+        var relevantItems = _context.Collection.AsEnumerable().Where(x => x.Styles!.Contains(styleName, StringComparer.OrdinalIgnoreCase)).ToList();
+
+        result.Result = relevantItems;
+        return result;
+    }
 }
 
 /// <summary>
@@ -201,4 +264,25 @@ public interface ICollectionService
     /// <param name="perPage"></param>
     /// <returns></returns>
     Task<ResultObject<List<CollectionItem>>> GetCollection(string username, int page, int perPage);
+
+    /// <summary>
+    /// Get all entries for a given artist
+    /// </summary>
+    /// <param name="artistName"></param>
+    /// <returns></returns>
+    ResultObject<List<CollectionItem>> GetAllForArtist(string artistName);
+
+    /// <summary>
+    /// Get all entires that are of the entered genre
+    /// </summary>
+    /// <param name="genreName"></param>
+    /// <returns></returns>
+    ResultObject<List<CollectionItem>> GetAllForGenre(string genreName);
+
+    /// <summary>
+    /// Get all entries that are of the entered style
+    /// </summary>
+    /// <param name="styleName"></param>
+    /// <returns></returns>
+    ResultObject<List<CollectionItem>> GetAllForStyle(string styleName);
 }

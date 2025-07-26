@@ -6,9 +6,11 @@ import { CSS } from "@dnd-kit/utilities";
 import { FaGripLines } from "react-icons/fa";
 
 import "../css/DraggableGrid.css";
+import "../css/GridItems.css";
 import ListEntries from "./grid-components/ListEntries";
 import GetItem from "./grid-components/GetItem";
 import GetStatus from "./grid-components/GetStatus";
+import GetAllFor from "./grid-components/GetAllFor";
 
 function SortableItem({ id, content }) {
     const { attributes, listeners, setNodeRef, transform, transition } =
@@ -37,9 +39,9 @@ export default function DraggableGrid() {
         { id: "4", content: <GetItem title={"Get Random CD"} apiCall={"api/collection/random/cd"} /> },
         { id: "5", content: "By The Numbers" },
         { id: "6", content: <GetStatus /> },
-        { id: "7", content: "Get All For Artist" },
-        { id: "8", content: "Get All For Genre" },
-        { id: "9", content: "Get All For Style" }
+        { id: "7", content: <GetAllFor title={"Artist"} textBoxApiCall={"api/info/artists"} listApiCall={"api/collection/getall/artist"} /> },
+        { id: "8", content: <GetAllFor title={"Genre"} textBoxApiCall={"api/info/genres"} listApiCall={"api/collection/getall/genre"} /> },
+        { id: "9", content: <GetAllFor title={"Style"} textBoxApiCall={"api/info/styles"} listApiCall={"api/collection/getall/style"} /> }
     ];
 
     const [items, setItems] = useState(defaultItems);

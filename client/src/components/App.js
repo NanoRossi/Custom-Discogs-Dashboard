@@ -21,7 +21,7 @@ function App() {
 
   return (
     <div className={`app-container ${darkMode ? 'dark' : ''}`}>
-      <Header username="My" darkMode={darkMode} setDarkMode={setDarkMode} />
+      <Header darkMode={darkMode} setDarkMode={setDarkMode} />
       <div className="content-container">
         <div className="main-content">
           <DraggableGrid />

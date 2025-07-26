@@ -1,10 +1,10 @@
 import '../css/Header.css'
 
-function Header({ username, darkMode, setDarkMode }) {
+function Header({ darkMode, setDarkMode }) {
   return (
     <header>
       <div className="header-content">
-        <h1>{username} Discogs Integrator</h1>
+        <h1>{process.env.REACT_APP_USERNAME}'s Discogs Dashboard</h1>
         <div className="dark-mode-toggle">
           <label>Dark Mode:</label>
           <label className="switch">

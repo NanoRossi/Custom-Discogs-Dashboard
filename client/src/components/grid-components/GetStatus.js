@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import "../../css/ListEntries.css";
-import "../../css/GetStatus.css";
 
 export default function GetStatus() {
     const [status, setStatus] = useState([]);
+    const [loading, setLoading] = useState(false);
+
 
     useEffect(() => {
         const getStatus = async () => {
@@ -16,12 +16,23 @@ export default function GetStatus() {
             }
         };
 
+        setLoading(false);
         getStatus();
     }, []);
 
+    const refreshData = async () => {
+        setLoading(true);
+        try {
+            await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/import`);
+            window.location.reload();
+        } catch (err) {
+            console.error(`Failed to refresh`, err);
+        }
+    };
+
     return (
         <div className="item-list-card">
-            <h3 className="item-list-title">Database Stats:</h3>
+            <h3 className="item-list-title">Database Info</h3>
 
             <div className="status">
                 <span>
@@ -35,6 +46,10 @@ export default function GetStatus() {
                 <span>{status.genreCount} different genres</span><br />
                 <span>{status.styleCount} different styles</span><br />
             </div>
+
+            <button onClick={(e) => { e.stopPropagation(); refreshData(); }} disabled={loading} className="fetch-button">
+                {loading ? "Loading..." : "Refresh Database"}
+            </button>
         </div>
     );
 }

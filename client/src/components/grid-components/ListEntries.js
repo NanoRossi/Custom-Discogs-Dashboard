@@ -1,5 +1,4 @@
 import { useEffect, useState } from "react";
-import "../../css/ListEntries.css";
 
 export default function ListEntries({ title, apiCall }) {
     const [wantlist, setWantlist] = useState([]);
