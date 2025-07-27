@@ -13,20 +13,20 @@ public static class FactTemplates
     /// <summary>
     /// Popular genre
     /// </summary>
-    public const string PopularGenre = "There are {0} items under \"{1}\", making it the {2} most popular genre";
+    public const string PopularGenre = "There are {0} item(s) under \"{1}\", ranking it {2} among genres";
 
     /// <summary>
     /// Popular style
     /// </summary>
-    public const string PopularStyle = "There are {0} items under \"{1}\", making it the {2} most popular style";
+    public const string PopularStyle = "There are {0} item(s) under \"{1}\", ranking it {2} among styles";
 
     /// <summary>
     /// Added
     /// </summary>
-    public const string Added = "{0} items were added in {1} {2}";
+    public const string Added = "{0} item(s) were added in {1} {2}";
 
     /// <summary>
     /// Single item in category
     /// </summary>
-    public const string SingleItemFor = "\"{0}\" is the only entry for \"{1}\", it's lonely!";
+    public const string SingleItemFor = "\"{0}\" is the only entry for \"{1}\"";
 }

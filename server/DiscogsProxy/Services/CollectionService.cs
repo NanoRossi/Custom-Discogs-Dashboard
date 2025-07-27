@@ -1,4 +1,5 @@
 using System.Text.Json.Nodes;
+using System.Threading.Tasks;
 using DiscogsProxy.DTO;
 using DiscogsProxy.Workers;
 using Microsoft.EntityFrameworkCore;
@@ -119,33 +120,18 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
         var mappedReleases = _apiHelper.MapReleases<CollectionItem>(allReleases);
 
         // populate the genre and styles tables
-        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Genres!), _context.Genres);
-        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Styles!), _context.Styles);
+        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Genres!).GroupBy(g => g).ToDictionary(g => g.Key, g => g.Count()), _context.Genres);
+        await HandleMusicInfo(mappedReleases.Result!.SelectMany(x => x.Styles!).GroupBy(g => g).ToDictionary(g => g.Key, g => g.Count()), _context.Styles);
         await _context.SaveChangesAsync();
 
         return mappedReleases;
     }
 
-    public async Task HandleMusicInfo<T>(IEnumerable<string> infos, DbSet<T> dbSet) where T : MusicInfo, new()
+    public async Task HandleMusicInfo<T>(Dictionary<string, int> infos, DbSet<T> dbSet) where T : MusicInfo, new()
     {
-        var infoList = infos.Distinct().ToList();
-
-        var existingEntities = await dbSet
-            .Where(x => infoList.Contains(x.Text!))
-            .ToListAsync();
-
-        var existingMap = existingEntities.ToDictionary(x => x.Text!);
-
-        foreach (var info in infoList)
+        foreach (var info in infos)
         {
-            if (existingMap.TryGetValue(info, out var existing))
-            {
-                existing.Instances++;
-            }
-            else
-            {
-                dbSet.Add(new T { Text = info, Instances = 1 });
-            }
+            await dbSet.AddAsync(new T() { Text = info.Key, Instances = info.Value });
         }
     }
 

@@ -27,7 +27,7 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
             // Collection fact
             return GenerateCollectionFact()!;
         }
-        else if (tableNum <= 9)
+        else if (tableNum <= 8)
         {
             // Genres fact
             return GenerateGenresFact();
@@ -59,7 +59,7 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
                 .ThenBy(g => g.Key)
                 .ToList(); // Keep it as list to preserve order & allow indexing
 
-            int index = _rand.Next(artistReleaseCounts.Count - 1);
+            int index = _rand.Next(artistReleaseCounts.Count);
             var entry = artistReleaseCounts[index];
 
             if (entry.Count() == 1)
@@ -69,7 +69,7 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
             }
             else
             {
-                return string.Format(FactTemplates.PopularArtist, entry.Key, GetHasOrHave(entry.Key), entry.Count(), MapIntToPlace(index));
+                return string.Format(FactTemplates.PopularArtist, entry.Key, GetHasOrHave(entry.Key), entry.Count(), MapIntToPlace(index + 1));
             }
         }
         else
@@ -128,10 +128,10 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
             .ThenBy(g => g.Text)
             .ToList();
 
-        int index = _rand.Next(infoCount.Count - 1);
+        int index = _rand.Next(infoCount.Count);
         var entry = infoCount[index];
 
-        return string.Format(stringTemplate, entry.Instances, entry.Text, MapIntToPlace(index));
+        return string.Format(stringTemplate, entry.Instances, entry.Text, MapIntToPlace(index + 1));
     }
 
     /// <summary>
