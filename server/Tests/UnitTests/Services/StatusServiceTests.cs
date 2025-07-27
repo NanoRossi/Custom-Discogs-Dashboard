@@ -33,6 +33,8 @@ public class StatusServiceTests
         result.Result.ShouldNotBeNull();
         result.Result.CollectionCount.ShouldBeNull();
         result.Result.WantlistCount.ShouldBeNull();
+        result.Result.GenreCount.ShouldBeNull();
+        result.Result.StyleCount.ShouldBeNull();
         result.Result.DatabaseStatus.ShouldBe(DbStatus.Disconnected);
 
         _mockDbChecker.Verify(x => x.CanConnect(), Times.Once);
@@ -48,6 +50,8 @@ public class StatusServiceTests
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
         _mockContext.Setup(x => x.Collection).ReturnsDbSet([]);
         _mockContext.Setup(x => x.Wantlist).ReturnsDbSet([]);
+        _mockContext.Setup(x => x.Genres).ReturnsDbSet([]);
+        _mockContext.Setup(x => x.Styles).ReturnsDbSet([]);
 
         // Act
         var result = GetStatusService().GetStatus();
@@ -57,6 +61,8 @@ public class StatusServiceTests
         result.Result.ShouldNotBeNull();
         result.Result.CollectionCount.ShouldBe(0);
         result.Result.WantlistCount.ShouldBe(0);
+        result.Result.GenreCount.ShouldBe(0);
+        result.Result.StyleCount.ShouldBe(0);
         result.Result.DatabaseStatus.ShouldBe(DbStatus.Empty);
 
         _mockDbChecker.Verify(x => x.CanConnect(), Times.Once);
@@ -73,6 +79,8 @@ public class StatusServiceTests
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
         _mockContext.Setup(x => x.Collection).ReturnsDbSet([new(), new(), new()]);
         _mockContext.Setup(x => x.Wantlist).ReturnsDbSet([new(), new(), new(), new()]);
+        _mockContext.Setup(x => x.Genres).ReturnsDbSet([new()]);
+        _mockContext.Setup(x => x.Styles).ReturnsDbSet([new(), new()]);
 
         // Act
         var result = GetStatusService().GetStatus();
@@ -82,6 +90,8 @@ public class StatusServiceTests
         result.Result.ShouldNotBeNull();
         result.Result.CollectionCount.ShouldBe(3);
         result.Result.WantlistCount.ShouldBe(4);
+        result.Result.GenreCount.ShouldBe(1);
+        result.Result.StyleCount.ShouldBe(2);
         result.Result.DatabaseStatus.ShouldBe(DbStatus.Active);
 
         _mockDbChecker.Verify(x => x.CanConnect(), Times.Once);

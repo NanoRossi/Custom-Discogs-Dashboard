@@ -9,7 +9,6 @@ public class InfoController(IInfoService infoService) : ControllerBase
 {
     private readonly IInfoService _infoService = infoService;
 
-
     [HttpGet("artists")]
     public ActionResult GetArtists()
     {
@@ -47,5 +46,18 @@ public class InfoController(IInfoService infoService) : ControllerBase
         }
 
         return Ok(styles.Result);
+    }
+
+    [HttpGet("fact")]
+    public ActionResult GetFact()
+    {
+        var fact = _infoService.GetFact();
+
+        if (fact.HasError)
+        {
+            return Problem(fact!.Error!.Message);
+        }
+
+        return Ok(fact.Result);
     }
 }

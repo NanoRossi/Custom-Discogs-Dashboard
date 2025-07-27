@@ -195,3 +195,13 @@
   flex-shrink: 0;
   width: 66%;
 }
+
+.fact-text-container {
+  display: flex;
+  align-items:center;
+  justify-content: center;
+  height: 250px;
+  text-align: center;
+  font-size: 1.5rem;
+  margin-top: 1rem;
+}

@@ -1,3 +1,4 @@
+using DiscogsProxy.Services;
 using Microsoft.EntityFrameworkCore;
 
 namespace DiscogsProxy.DTO;
@@ -19,6 +20,51 @@ public class DiscogsContext : DbContext
     public DiscogsContext(DbContextOptions<DiscogsContext> options) : base(options)
     {
 
+    }
+
+    protected override void OnModelCreating(ModelBuilder modelBuilder)
+    {
+        base.OnModelCreating(modelBuilder);
+
+        modelBuilder.Entity<WantlistItem>(entity =>
+        {
+            // FormatInfo is owned by CollectionItem
+            entity.OwnsOne(ci => ci.FormatInfo, fmt =>
+            {
+                fmt.Property(f => f.FormatType);
+
+                // DiscInfo is a collection owned by FormatInfo
+                fmt.OwnsMany(f => f.DiscInfo, disc =>
+                {
+                    disc.Property(d => d.Quantity);
+                    disc.Property(d => d.Text);
+
+                    // You may need a key here (required for Owned Collections in EF Core)
+                    disc.WithOwner();
+                    disc.HasKey("Id"); // Shadow key
+                });
+            });
+        });
+
+        modelBuilder.Entity<CollectionItem>(entity =>
+        {
+            // FormatInfo is owned by CollectionItem
+            entity.OwnsOne(ci => ci.FormatInfo, fmt =>
+            {
+                fmt.Property(f => f.FormatType);
+
+                // DiscInfo is a collection owned by FormatInfo
+                fmt.OwnsMany(f => f.DiscInfo, disc =>
+                {
+                    disc.Property(d => d.Quantity);
+                    disc.Property(d => d.Text);
+
+                    // You may need a key here (required for Owned Collections in EF Core)
+                    disc.WithOwner();
+                    disc.HasKey("Id"); // Shadow key
+                });
+            });
+        });
     }
 
     /// <summary>

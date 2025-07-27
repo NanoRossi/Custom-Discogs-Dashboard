@@ -9,10 +9,11 @@ namespace DiscogsProxy.Services;
 /// </summary>
 /// <param name="discogsContext"></param>
 /// <param name="dbChecker"></param>
-public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbChecker) : IInfoService
+public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbChecker, IFactGenerator factGenerator) : IInfoService
 {
     private readonly DiscogsContext _discogsContext = discogsContext;
     private readonly IDatabaseChecker _dbChecker = dbChecker;
+    private readonly IFactGenerator _factGenerator = factGenerator;
 
     /// <summary>
     /// Get all artists in the collection
@@ -70,9 +71,32 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
             return result;
         }
 
-        var styles = _discogsContext.Styles.AsNoTracking().Select(x => x.Text!).Order();
+        var styles = _discogsContext.Styles
+        .AsNoTracking()
+        .Select(x => x.Text!)
+        .Where(text => !string.IsNullOrWhiteSpace(text))
+        .Order();
 
         result.Result = [.. styles];
+        return result;
+    }
+
+    /// <summary>
+    /// Generate a pseudo random fact about the dataset
+    /// </summary>
+    /// <returns></returns>
+    public ResultObject<string> GetFact()
+    {
+        var result = new ResultObject<string>();
+
+        if (!_dbChecker.CanConnect())
+        {
+            result.Error = new Exception("Cannot connect to Database");
+            return result;
+        }
+
+        result.Result = _factGenerator.GenerateFact();
+
         return result;
     }
 }
@@ -99,4 +123,10 @@ public interface IInfoService
     /// </summary>
     /// <returns></returns>
     ResultObject<List<string>> GetGenres();
+
+    /// <summary>
+    /// Generate a pseudo random fact about the dataset
+    /// </summary>
+    /// <returns></returns>
+    public ResultObject<string> GetFact();
 }

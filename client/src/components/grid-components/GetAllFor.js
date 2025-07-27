@@ -32,7 +32,7 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
 
     useEffect(() => {
         fetchOptions();
-    }, []);
+    }, [fetchOptions]);
 
     const handleChange = (e) => {
         setSelected(e.target.value);
@@ -65,7 +65,7 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
                         <div>
                             <strong>{item.artistName.join(', ')}</strong><br />
                             <span>{item.releaseName}</span><br />
-                            <span>{item.formatType}</span>
+                            <span>{item.formatInfo.formatType}</span>
                         </div>
                     </div>
                 ))}

@@ -55,7 +55,7 @@ public class Item
     public List<string>? Styles { get; set; }
 
     /// <summary>
-    /// Format Type
+    /// Format info
     /// </summary>
-    public string? FormatType { get; set; }
+    public FormatInfo? FormatInfo { get; set; }
 }

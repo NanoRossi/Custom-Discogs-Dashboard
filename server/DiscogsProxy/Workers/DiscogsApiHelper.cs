@@ -83,7 +83,7 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
                 CoverImage = itemNode.GetPropertyValue<Uri>("basic_information", "cover_image"),
                 Genres = itemNode.GetPropertyValue<List<string>, string>("basic_information", "genres"),
                 Styles = itemNode.GetPropertyValue<List<string>, string>("basic_information", "styles"),
-                FormatType = GetFormat(itemNode.GetPropertyValue<JsonArray>("basic_information", "formats")!)
+                FormatInfo = GetFormat(itemNode.GetPropertyValue<JsonArray>("basic_information", "formats")!)
             };
 
             bag.TryAdd(id, release);
@@ -99,26 +99,62 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     /// </summary>
     /// <param name="formats"></param>
     /// <returns></returns>
-    private static string GetFormat(JsonArray formats)
+    private static FormatInfo GetFormat(JsonArray formats)
     {
         if (formats.Count == 0)
         {
-            return "";
+            return new FormatInfo();
         }
 
-        foreach (var node in formats)
+        // the type of entry is stored in the first property of the obj
+        var types = formats.Select(x => x!.GetPropertyValue<string>("name")).ToList();
+        types.RemoveAll(x => x == "All Media");
+
+        if (types.Contains("Vinyl"))
         {
-            var type = node.GetPropertyValue<string>("name");
-
-            // This seeems to appear on some items, potentially an internal tag?
-            // Regardless, we want something like "Vinyl" or "CD"
-            if (type != "All Media")
+            return new FormatInfo
             {
-                return type!;
-            }
+                FormatType = "Vinyl",
+                DiscInfo = BuildDiscInfo(formats)
+            };
+        }
+        else if (types.Contains("CD"))
+        {
+            return new FormatInfo
+            {
+                FormatType = "CD",
+                DiscInfo = []
+            };
+        }
+        else if (types.Contains("Cassette"))
+        {
+            return new FormatInfo
+            {
+                FormatType = "Cassette",
+                DiscInfo = []
+            };
         }
 
-        return "";
+        return null!;
+    }
+
+    private static List<DiscInfo> BuildDiscInfo(JsonArray entries)
+    {
+        var result = new List<DiscInfo>();
+
+        foreach (var entry in entries)
+        {
+            var asObj = entry as JsonObject;
+            var text = asObj.GetPropertyValue<string>("text");
+
+            result.Add(new DiscInfo()
+            {
+                Quantity = Convert.ToInt32(asObj.GetPropertyValue<string>("qty")),
+                Text = (!string.IsNullOrEmpty(text) && text != "null") ? text.Replace("Vinyl", "") : "Black"
+            });
+        }
+
+        return result;
     }
 
     /// <summary>

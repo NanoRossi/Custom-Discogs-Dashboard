@@ -47,13 +47,13 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
             return result;
         }
 
-        int count = await _context.Collection.Where(x => x.FormatType == itemType).CountAsync();
+        int count = await _context.Collection.Where(x => x.FormatInfo!.FormatType == itemType).CountAsync();
 
         int index = new Random().Next(count);
 
         // Get a random value
         result.Result = await _context.Collection
-            .Where(x => x.FormatType == itemType)
+            .Where(x => x.FormatInfo!.FormatType == itemType)
             .Skip(index)
             .FirstOrDefaultAsync();
 
@@ -126,24 +126,29 @@ public class CollectionService(DiscogsContext context, IDiscogsApiHelper apiHelp
         return mappedReleases;
     }
 
-    public async Task HandleMusicInfo<T>(IEnumerable<string> infos, DbSet<T> dbSet)
-    where T : MusicInfo, new()
+    public async Task HandleMusicInfo<T>(IEnumerable<string> infos, DbSet<T> dbSet) where T : MusicInfo, new()
     {
         var infoList = infos.Distinct().ToList();
 
-        var existingInfos = await dbSet
-            .AsNoTracking()
+        var existingEntities = await dbSet
             .Where(x => infoList.Contains(x.Text!))
-            .Select(x => x.Text)
             .ToListAsync();
 
-        var newInfos = infoList.Except(existingInfos);
+        var existingMap = existingEntities.ToDictionary(x => x.Text!);
 
-        foreach (var info in newInfos)
+        foreach (var info in infoList)
         {
-            dbSet.Add(new T { Text = info });
+            if (existingMap.TryGetValue(info, out var existing))
+            {
+                existing.Instances++;
+            }
+            else
+            {
+                dbSet.Add(new T { Text = info, Instances = 1 });
+            }
         }
     }
+
 
     /// <summary>
     /// Query the Discogs API for the given user's collection
