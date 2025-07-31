@@ -32,7 +32,7 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
 
     useEffect(() => {
         fetchOptions();
-    }, [fetchOptions]);
+    }, []);
 
     const handleChange = (e) => {
         setSelected(e.target.value);
@@ -65,7 +65,20 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
                         <div>
                             <strong>{item.artistName.join(', ')}</strong><br />
                             <span>{item.releaseName}</span><br />
-                            <span>{item.formatInfo.formatType}</span>
+                            <span>
+                                {item.formatInfo && item.formatInfo.discInfo && item.formatInfo?.discInfo.some(d => d.text) ? (
+                                    item.formatInfo.discInfo
+                                        .filter(d => d.text)
+                                        .map((d, idx, arr) => (
+                                            <span key={d.id}>
+                                                {d.quantity} × {d.text}
+                                                {idx < arr.length - 1 && ', '} Vinyl
+                                            </span>
+                                        ))
+                                ) : (
+                                    item.formatInfo?.formatType
+                                )}
+                            </span>
                         </div>
                     </div>
                 ))}

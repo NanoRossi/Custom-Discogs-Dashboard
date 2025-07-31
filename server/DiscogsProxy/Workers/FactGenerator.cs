@@ -20,6 +20,9 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
     /// <returns></returns>
     public string GenerateFact()
     {
+        // Can tweak these numbers as we like
+        // But there are far more potential facts from the collection
+        // Than from the genre/styles
         var tableNum = _rand.Next(10);
 
         if (tableNum <= 7)
@@ -74,19 +77,21 @@ public partial class FactGenerator(DiscogsContext discogsContext) : IFactGenerat
         }
         else
         {
+            // Pick all the indvidual months and group them together
+            // And count them
+            // This will enable us to count releases added by month in any given year 
             var groupedByMonth = _context.Collection
                 .Select(x => x.DateAdded)
                 .GroupBy(d => new { d.Year, d.Month })
                 .Select(g => new
                 {
-                    Year = g.Key.Year,
-                    Month = g.Key.Month,
+                    g.Key.Year,
+                    g.Key.Month,
                     Count = g.Count()
                 })
                 .ToList();
 
-            var rand = new Random();
-            var randomIndex = rand.Next(groupedByMonth.Count - 1);
+            var randomIndex = _rand.Next(groupedByMonth.Count - 1);
             var randomMonth = groupedByMonth[randomIndex];
 
             return string.Format(FactTemplates.Added, randomMonth.Count, CultureInfo.CurrentCulture.DateTimeFormat.GetMonthName(randomMonth.Month), randomMonth.Year);

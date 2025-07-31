@@ -2,11 +2,18 @@ using System.Text.Json.Nodes;
 
 namespace DiscogsProxy.Workers;
 
-// TODO: Comments and tests!
-
+/// <summary>
+/// Helper class to handle JsonNodes
+/// </summary>
 public static class JsonHelper
 {
-    // For simple types (string, int, Uri, etc.)
+    /// <summary>
+    /// Process through a JsonNode to find an item on a given path
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="input"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public static T? GetPropertyValue<T>(this JsonNode? input, params string[] path)
     {
         if (input == null || path.Length == 0)
@@ -27,6 +34,16 @@ public static class JsonHelper
         return HandleNodeSimple<T>(input);
     }
 
+    /// <summary>
+    /// Process through a JsonNode to find an item on a given path
+    /// More advanced version where we intent to process a JsonArray at the end
+    /// And convert it's elements into a List
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TElem"></typeparam>
+    /// <param name="input"></param>
+    /// <param name="path"></param>
+    /// <returns></returns>
     public static T? GetPropertyValue<T, TElem>(this JsonNode? input, params string[] path) where T : ICollection<TElem>, new()
     {
         if (input == null || path.Length == 0)
@@ -43,6 +60,14 @@ public static class JsonHelper
         return HandleNodeCollection<T, TElem>(input);
     }
 
+    /// <summary>
+    /// Handle a "simple" JsonNode
+    /// Either we return the node wholesale
+    /// or we convert it to a primitive type; string, int. (also custom section for URI)
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <param name="input"></param>
+    /// <returns></returns>
     private static T? HandleNodeSimple<T>(JsonNode? input)
     {
         if (input == null)
@@ -73,6 +98,16 @@ public static class JsonHelper
         return default;
     }
 
+    /// <summary>
+    /// Process a JsonNode
+    /// And return a list of elements
+    /// We need to get each element in a potential JsonArray as TElem
+    /// So if T is List<string>. TElem is just string
+    /// </summary>
+    /// <typeparam name="T"></typeparam>
+    /// <typeparam name="TElem"></typeparam>
+    /// <param name="input"></param>
+    /// <returns></returns>
     private static T? HandleNodeCollection<T, TElem>(JsonNode? input) where T : ICollection<TElem>, new()
     {
         if (input == null)
@@ -100,6 +135,13 @@ public static class JsonHelper
         return default;
     }
 
+    /// <summary>
+    /// Navigate through a JsonNode and get the key
+    /// If the key is an int, we're trying to get the index within an array
+    /// </summary>
+    /// <param name="node"></param>
+    /// <param name="key"></param>
+    /// <returns></returns>
     private static JsonNode? NavigateNode(JsonNode node, string key)
     {
         if (int.TryParse(key, out int index) && node is JsonArray array)

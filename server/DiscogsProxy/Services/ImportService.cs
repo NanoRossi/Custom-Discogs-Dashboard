@@ -29,8 +29,17 @@ public class ImportService(DiscogsContext context, IDiscogsApiHelper apiHelper, 
             return result;
         }
 
-        await _context.Database.EnsureDeletedAsync();
-        await _context.Database.EnsureCreatedAsync();
+        if (!await _context.Database.EnsureDeletedAsync())
+        {
+            result.Error = new Exception("Could not delete Database");
+            return result;
+        }
+
+        if (!await _context.Database.EnsureCreatedAsync())
+        {
+            result.Error = new Exception("Could not create Database");
+            return result;
+        }
 
         return result;
     }

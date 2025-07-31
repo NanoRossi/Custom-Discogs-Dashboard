@@ -17,7 +17,6 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     private readonly string _token = config["DiscogsToken"] ?? throw new ArgumentNullException("DiscogsToken env variable not found");
     private readonly string _username = config["DiscogsUsername"] ?? throw new ArgumentNullException("DiscogsUsername env variable not found");
 
-
     /// <summary>
     /// Create a HTTP Client to Discogs using our token
     /// </summary>
@@ -99,9 +98,9 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     /// </summary>
     /// <param name="formats"></param>
     /// <returns></returns>
-    private static FormatInfo GetFormat(JsonArray formats)
+    public static FormatInfo GetFormat(JsonArray formats)
     {
-        if (formats.Count == 0)
+        if (formats == null || formats.Count == 0)
         {
             return new FormatInfo();
         }
