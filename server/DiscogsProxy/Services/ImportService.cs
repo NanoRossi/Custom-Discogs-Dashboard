@@ -1,5 +1,6 @@
 using DiscogsProxy.DTO;
 using DiscogsProxy.Workers;
+using Microsoft.EntityFrameworkCore;
 
 namespace DiscogsProxy.Services;
 
@@ -16,32 +17,73 @@ public class ImportService(DiscogsContext context, IDiscogsApiHelper apiHelper, 
     private readonly IWantListService _wantlistService = wantListService;
 
     /// <summary>
-    /// Recycle the DB
-    /// Delete everything and re-build tables from scratch 
+    /// Import data from Discogs
+    /// This will clear the existing data and re-import the collection and wantlist
     /// </summary>
-    public async Task<ResultObject<bool>> RecycleDb()
+    /// <returns></returns>
+    public async Task<ResultObject<bool>> ImportData()
     {
         var result = new ResultObject<bool>();
+        using var transaction = await _context.Database.BeginTransactionAsync();
 
-        if (!await _apiHelper.ProfileIsValid())
+        try
         {
-            result.Error = new Exception("Invalid profile configuration");
-            return result;
+            if (!await _apiHelper.ProfileIsValid())
+            {
+                result.Error = new Exception("Invalid profile configuration");
+                return result;
+            }
+
+            // Clear existing data (see next step)
+            await TruncateTablesAsync();
+
+            // Import collection, genres and styles
+            var collectionImport = await ImportCollection();
+            if (collectionImport.HasError)
+            {
+                await transaction.RollbackAsync();
+                return collectionImport;
+            }
+
+            // import wantlist
+            var wantlistImport = await ImportWantlist();
+            if (wantlistImport.HasError)
+            {
+                await transaction.RollbackAsync();
+                return collectionImport;
+            }
+
+            // Commit if all successful
+            await transaction.CommitAsync();
         }
-
-        if (!await _context.Database.EnsureDeletedAsync())
+        catch (Exception ex)
         {
-            result.Error = new Exception("Could not delete Database");
-            return result;
-        }
-
-        if (!await _context.Database.EnsureCreatedAsync())
-        {
-            result.Error = new Exception("Could not create Database");
-            return result;
+            // Rollback if anything fails
+            await transaction.RollbackAsync();
+            result.Error = ex;
         }
 
         return result;
+    }
+
+    /// <summary>
+    /// Truncate the tables in the database
+    /// This will delete all data and reset identity counters
+    /// </summary>   
+    public async Task TruncateTablesAsync()
+    {
+        var tableNames = new[] { "Collection", "Wantlist", "Styles", "Genres" };
+
+        foreach (var table in tableNames)
+        {
+            await _context.Database.ExecuteSqlAsync($"DELETE FROM [{table}]");
+        }
+
+        // Reset identity counters
+        foreach (var table in tableNames)
+        {
+            await _context.Database.ExecuteSqlAsync($"DELETE FROM sqlite_sequence WHERE name = '{table}'");
+        }
     }
 
     /// <summary>
@@ -111,20 +153,9 @@ public class ImportService(DiscogsContext context, IDiscogsApiHelper apiHelper, 
 public interface IImportService
 {
     /// <summary>
-    /// Recycle the DB
-    /// Delete everything and re-build tables from scratch 
-    /// </summary>
-    Task<ResultObject<bool>> RecycleDb();
-
-    /// <summary>
-    /// Build the collection table by querying Discogs
+    /// Import data from Discogs
+    /// This will clear the existing data and re-import the collection and wantlist
     /// </summary>
     /// <returns></returns>
-    Task<ResultObject<bool>> ImportCollection();
-
-    /// <summary>
-    /// Build the wantlist table by querying Discogs
-    /// </summary>
-    /// <returns></returns>
-    Task<ResultObject<bool>> ImportWantlist();
+    Task<ResultObject<bool>> ImportData();
 }

@@ -33,55 +33,6 @@ public class ImportServiceTests
            _mockWantlistService.Object);
     }
 
-    #region RecycleDb
-    [Fact]
-    public async Task RecycleDb_ProfileInvalid()
-    {
-        // Arrange
-        _mockApiHelper.Setup(x => x.ProfileIsValid()).ReturnsAsync(false);
-
-        var databaseMock = new Mock<DatabaseFacade>(MockBehavior.Strict, [new Mock<DbContext>().Object]);
-
-        _mockDiscogsContext.SetupGet(x => x.Database).Returns(databaseMock.Object);
-
-        // Act
-        var result = await _importService.RecycleDb();
-
-        // Assert
-        result.HasError.ShouldBeTrue();
-        result.Error!.Message.ShouldBe("Invalid profile configuration");
-
-        _mockApiHelper.Verify(x => x.ProfileIsValid(), Times.Once);
-        _mockApiHelper.VerifyNoOtherCalls();
-        databaseMock.VerifyNoOtherCalls();
-    }
-
-    [Fact]
-    public async Task RecycleDb_ProfileValid_RecyclesDatabase()
-    {
-        // Arrange
-        _mockApiHelper.Setup(x => x.ProfileIsValid()).ReturnsAsync(true);
-
-        var databaseMock = new Mock<DatabaseFacade>(MockBehavior.Strict, [new Mock<DbContext>().Object]);
-        databaseMock.Setup(x => x.EnsureDeletedAsync(It.IsAny<CancellationToken>())).ReturnsAsync(true);
-        databaseMock.Setup(x => x.EnsureCreatedAsync(It.IsAny<CancellationToken>())).ReturnsAsync(true);
-
-        _mockDiscogsContext.SetupGet(x => x.Database).Returns(databaseMock.Object);
-
-        // Act
-        var result = await _importService.RecycleDb();
-
-        // Assert
-        result.HasError.ShouldBeFalse();
-
-        _mockApiHelper.Verify(x => x.ProfileIsValid(), Times.Once);
-        _mockApiHelper.VerifyNoOtherCalls();
-        databaseMock.Verify(x => x.EnsureDeletedAsync(It.IsAny<CancellationToken>()), Times.Once);
-        databaseMock.Verify(x => x.EnsureCreatedAsync(It.IsAny<CancellationToken>()), Times.Once);
-        databaseMock.VerifyNoOtherCalls();
-    }
-    #endregion
-
     #region ImportCollection
     [Theory]
     [InlineData(null)]

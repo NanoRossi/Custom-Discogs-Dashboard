@@ -12,25 +12,11 @@ public class ImportController(IImportService importService) : ControllerBase
     [HttpGet("")]
     public async Task<ActionResult> ImportDataset()
     {
-        var recycle = await _importService.RecycleDb();
+        var importData = await _importService.ImportData();
 
-        if (recycle.HasError)
+        if (importData.HasError)
         {
-            return Problem(recycle.Error!.Message);
-        }
-
-        var collectionImport = await _importService.ImportCollection();
-
-        if (collectionImport.HasError)
-        {
-            return Problem("Error importing Collection");
-        }
-
-        var wantlistImport = await _importService.ImportWantlist();
-
-        if (wantlistImport.HasError)
-        {
-            return Problem("Error importing Wantlist");
+            return Problem(importData.Error!.Message);
         }
 
         return Ok("Data imported!");
