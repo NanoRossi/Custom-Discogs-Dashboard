@@ -1,0 +1,38 @@
+replicaCount: 1
+
+image:
+  repository: discogs-server
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8080
+
+persistence:
+  enabled: true
+  storageClass: standard
+  accessMode: ReadWriteOnce
+  size: 10Gi
+
+config:
+  DiscogsUsername: ""
+  UserAgent: "MyDiscogsApp/1.0"
+  Logging:
+    LogLevel:
+      Default: "Information"
+      Microsoft.AspNetCore: "Warning"
+  AllowedHosts: "*"
+
+existingSecret:
+  name: discogs-token
+  key: token
+
+ingress:
+  enabled: true
+  className: nginx
+  hosts:
+    - host: discogs.server.local
+      paths:
+        - path: /
+          pathType: Prefix

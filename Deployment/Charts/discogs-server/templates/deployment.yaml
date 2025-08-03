@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: {{ include "discogs-server.fullname" . }}
+  labels:
+    {{- include "discogs-server.labels" . | nindent 4 }}
+spec:
+  replicas: {{ .Values.replicaCount }}
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: {{ include "discogs-server.name" . }}
+      app.kubernetes.io/instance: {{ .Release.Name }}
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: {{ include "discogs-server.name" . }}
+        app.kubernetes.io/instance: {{ .Release.Name }}
+    spec:
+      containers:
+        - name: {{ .Chart.Name }}
+          image: "{{ .Values.image.repository }}:{{ .Values.image.tag | default .Chart.AppVersion }}"
+          imagePullPolicy: {{ .Values.image.pullPolicy }}
+          ports:
+            - name: http
+              containerPort: {{ .Values.service.port }}
+              protocol: TCP
+          volumeMounts:
+            - name: config-volume
+              mountPath: /app/appsettings.json
+              subPath: appsettings.json
+              readOnly: true
+            - name: {{ include "discogs-server.fullname" . }}-pv
+              mountPath: /data  
+          env:
+            - name: DiscogsToken
+              valueFrom:
+                secretKeyRef:
+                  name: {{ .Values.existingSecret.name }}
+                  key: {{ .Values.existingSecret.key }}
+          livenessProbe:
+            httpGet:
+              path: /api/status
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 60
+          readinessProbe:
+            httpGet:
+              path: /api/status
+              port: {{ .Values.service.port }}
+            initialDelaySeconds: 5
+            periodSeconds: 60
+      volumes:
+        - name: config-volume
+          configMap:
+            name: {{ include "discogs-server.fullname" . }}-config
+        - name: {{ include "discogs-server.fullname" . }}-pv
+          persistentVolumeClaim:
+            claimName: {{ include "discogs-server.fullname" . }}-pvc

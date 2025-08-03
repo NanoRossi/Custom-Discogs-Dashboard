@@ -8,7 +8,8 @@ export default function GetStatus() {
     useEffect(() => {
         const getStatus = async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/status`);
+                const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+                const res = await fetch(`${apiBaseUrl}/api/status`);
                 const data = await res.json();
                 setStatus(data);
             } catch (err) {
@@ -23,7 +24,8 @@ export default function GetStatus() {
     const refreshData = async () => {
         setLoading(true);
         try {
-            await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/import`);
+            const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+            await fetch(`${apiBaseUrl}/api/import`);
             window.location.reload();
         } catch (err) {
             console.error(`Failed to refresh`, err);

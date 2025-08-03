@@ -13,7 +13,8 @@ export default function GetFact() {
             await new Promise((resolve) => setTimeout(resolve, 500));
 
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/api/info/fact`);
+                const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+                const res = await fetch(`${apiBaseUrl}/api/info/fact`);
                 const data = await res.text();
 
                 setFact(data);

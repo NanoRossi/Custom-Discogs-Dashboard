@@ -7,11 +7,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowLocalhost3000", policy =>
+    options.AddPolicy("AllowFrontend", policy =>
     {
-        policy.WithOrigins("http://localhost:3000")
-              .AllowAnyMethod()
-              .AllowAnyHeader();
+        // localhost 3000 for local development
+        // discogs.client.local for kubernetes
+        policy.WithOrigins("http://localhost:3000", "http://discogs.client.local")
+            .AllowAnyMethod()
+            .AllowAnyHeader();
     });
 });
 
@@ -35,19 +37,21 @@ builder.Services.AddScoped<IFactGenerator, FactGenerator>();
 // Register EF Core with SQLite
 // TODO: move db file into configuration
 builder.Services.AddDbContext<DiscogsContext>(options =>
-    options.UseSqlite("Data Source=discogs.db"));
+    options.UseSqlite(builder.Configuration.GetConnectionString("DefaultConnection")));
+
+builder.Configuration.AddEnvironmentVariables();
 
 var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseCors("AllowFrontend");
+app.MapControllers();
+
+// For initial startup, we will ensure the database is created and migrated
+using (var scope = app.Services.CreateScope())
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    var dbContext = scope.ServiceProvider.GetRequiredService<DiscogsContext>();
+    dbContext.Database.EnsureCreated();
 }
 
-app.UseCors("AllowLocalhost3000");
-app.UseHttpsRedirection();
-app.MapControllers();
 
 app.Run();

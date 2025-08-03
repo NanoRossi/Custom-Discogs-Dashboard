@@ -1,0 +1,25 @@
+replicaCount: 1
+
+image:
+  repository: discogs-client
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 80
+
+ingress:
+  enabled: true
+  className: nginx
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+  hosts:
+    - host: discogs.client.local
+      paths:
+        - path: /
+          pathType: Prefix
+env:
+  REACT_APP_API_BASE_URL: "http://discogs.server.local"
+  REACT_APP_USERNAME: ""
+resources: {}

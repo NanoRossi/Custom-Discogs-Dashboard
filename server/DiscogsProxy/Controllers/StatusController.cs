@@ -17,7 +17,7 @@ public class StatusController(IStatusService statusService) : ControllerBase
 
         if (status!.Result!.DatabaseStatus == DbStatus.Disconnected)
         {
-            return Problem("Cannot connect to Database");
+            return Ok("Cannot connect to Database");
         }
 
         return Ok(status.Result);

@@ -1,0 +1,21 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: {{ include "discogs-server.fullname" . }}-config
+data:
+  appsettings.json: |
+    {
+      "DiscogsUsername": "{{ .Values.config.DiscogsUsername }}",
+      "UserAgent": "{{ .Values.config.UserAgent }}",
+      "DiscogsToken": "", 
+      "Logging": {
+        "LogLevel": {
+          "Default": "{{ .Values.config.Logging.LogLevel.Default }}",
+          "Microsoft.AspNetCore": "{{ .Values.config.Logging.LogLevel.MicrosoftAspNetCore }}"
+        }
+      },
+      "ConnectionStrings": {
+        "DefaultConnection": "Data Source=/data/sqlite.db"
+      },
+      "AllowedHosts": "{{ .Values.config.AllowedHosts }}"
+    }

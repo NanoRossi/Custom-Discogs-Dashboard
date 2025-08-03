@@ -6,7 +6,8 @@ export default function ListEntries({ title, apiCall }) {
     useEffect(() => {
         const fetchData = async () => {
             try {
-                const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${apiCall}`);
+                const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+                const res = await fetch(`${apiBaseUrl}/${apiCall}`);
                 const data = await res.json();
                 setWantlist(data);
             } catch (err) {

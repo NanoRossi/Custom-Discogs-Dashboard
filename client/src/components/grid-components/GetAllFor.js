@@ -8,7 +8,8 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
 
     const fetchOptions = async () => {
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${textBoxApiCall}`);
+            const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+            const res = await fetch(`${apiBaseUrl}/${textBoxApiCall}`);
             const data = await res.json();
             setOptions(data);
         } catch (err) {
@@ -20,7 +21,8 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
 
         setLoading(true);
         try {
-            const res = await fetch(`${process.env.REACT_APP_API_BASE_URL}/${listApiCall}/${selected}`);
+            const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
+            const res = await fetch(`${apiBaseUrl}/${listApiCall}/${selected}`);
             const data = await res.json();
             setEntries(data);
         } catch (err) {

@@ -76,13 +76,13 @@ public class ImportService(DiscogsContext context, IDiscogsApiHelper apiHelper, 
 
         foreach (var table in tableNames)
         {
-            await _context.Database.ExecuteSqlAsync($"DELETE FROM [{table}]");
+            await _context.Database.ExecuteSqlRawAsync($"DELETE FROM [{table}]");
         }
 
         // Reset identity counters
         foreach (var table in tableNames)
         {
-            await _context.Database.ExecuteSqlAsync($"DELETE FROM sqlite_sequence WHERE name = '{table}'");
+            await _context.Database.ExecuteSqlRawAsync($"DELETE FROM sqlite_sequence WHERE name = '{table}'");
         }
     }
 
