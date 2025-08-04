@@ -1,4 +1,4 @@
-# Discogs Integrator - Deployment and Development Guide
+# Custom-Discogs-Dashboard - Deployment and Development Guide
 
 This project involves a .NET 8 API backend paired with a React frontend to create a custom dashboard for a user's Discogs.com profile.
 
