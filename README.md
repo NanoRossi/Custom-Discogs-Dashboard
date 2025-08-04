@@ -214,12 +214,10 @@ You can customise the name of this, and update the matching name in the server v
    - Install discogs-client
 5. DeployWithToken.ps1
    - Creates the Kube secret from a passed in value
+   - Runs scripts 1 and 2
   
 # TODO
 
 - [ ] Add E2E backend tests
 - [ ] Add Frontend tests
 - [ ] Automate deployment to local server on master push
-      
-   - Runs scripts 1 and 2
-
