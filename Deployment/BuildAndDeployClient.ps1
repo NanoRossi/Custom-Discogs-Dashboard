@@ -1,6 +1,6 @@
 $startDir = Get-Location
 
-Write-Host "Starting client deployment..."
+Write-Host "Starting Client deployment..."
 
 Set-Location ..\client
 Write-Host "Building Docker image..."
@@ -17,4 +17,4 @@ Write-Host "Installing Helm release..."
 helm install discogs-client discogs-client
 
 Set-Location $startDir
-Write-Host "Deployment complete."
+Write-Host "Client Deployment complete."
