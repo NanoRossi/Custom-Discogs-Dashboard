@@ -44,7 +44,7 @@ When running from an IDE the API will run on http://localhost:8080
 #### 'GET /import'
 - Builds the Collection, Wantlist, Genre and Styles table by getting the user's collection and wantlist from the Discogs.com API
 
-- #### 'GET /status'
+#### 'GET /status'
 - Returns information on the current DB. How many items are in each table, along with a DB status which will read Active, Empty or Disconnected
 
 #### `GET /collection/random/vinyl`
@@ -84,7 +84,7 @@ When running from an IDE the API will run on http://localhost:8080
 
 Bootstrapped using: https://create-react-app.dev/
 
-The client is a single page application that present numerous grid components that can be moved and rearranged as desired. It is straight forward to add new components ot explain the functionality of the dashboard. 
+The client is a single page application that present numerous grid components that can be moved and rearranged as desired. It is straight forward to add new components to explain the functionality of the dashboard. 
 
 At the time of writing there are 9 existing components:
 1. List all items in the wantlist
@@ -214,5 +214,12 @@ You can customise the name of this, and update the matching name in the server v
    - Install discogs-client
 5. DeployWithToken.ps1
    - Creates the Kube secret from a passed in value
+  
+# TODO
+
+- [ ] Add E2E backend tests
+- [ ] Add Frontend tests
+- [ ] Automate deployment to local server on master push
+      
    - Runs scripts 1 and 2
 
