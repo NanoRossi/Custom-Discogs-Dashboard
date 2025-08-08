@@ -68,7 +68,7 @@ public class StatusServiceTests
         _mockDbChecker.Verify(x => x.CanConnect(), Times.Once);
         _mockDbChecker.VerifyNoOtherCalls();
 
-        _mockContext.Verify(x => x.Collection, Times.Once);
+        _mockContext.Verify(x => x.Collection, Times.Exactly(4));
         _mockContext.Verify(x => x.Wantlist, Times.Once);
     }
 
@@ -77,7 +77,11 @@ public class StatusServiceTests
     {
         // Arrange
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
-        _mockContext.Setup(x => x.Collection).ReturnsDbSet([new(), new(), new()]);
+        _mockContext.Setup(x => x.Collection).ReturnsDbSet([
+            new() { FormatInfo = new() { FormatType = "Vinyl"} },
+            new() { FormatInfo = new() { FormatType = "Vinyl"} },
+            new() { FormatInfo = new() { FormatType = "CD"} },
+            new() { FormatInfo = new() { FormatType = "Cassette"} },]);
         _mockContext.Setup(x => x.Wantlist).ReturnsDbSet([new(), new(), new(), new()]);
         _mockContext.Setup(x => x.Genres).ReturnsDbSet([new()]);
         _mockContext.Setup(x => x.Styles).ReturnsDbSet([new(), new()]);
@@ -88,16 +92,19 @@ public class StatusServiceTests
         // Assert
         result.HasError.ShouldBeFalse();
         result.Result.ShouldNotBeNull();
-        result.Result.CollectionCount.ShouldBe(3);
+        result.Result.CollectionCount.ShouldBe(4);
         result.Result.WantlistCount.ShouldBe(4);
         result.Result.GenreCount.ShouldBe(1);
         result.Result.StyleCount.ShouldBe(2);
+        result.Result.VinylCount.ShouldBe(2);
+        result.Result.CDCount.ShouldBe(1);
+        result.Result.CassetteCount.ShouldBe(1);
         result.Result.DatabaseStatus.ShouldBe(DbStatus.Active);
 
         _mockDbChecker.Verify(x => x.CanConnect(), Times.Once);
         _mockDbChecker.VerifyNoOtherCalls();
 
-        _mockContext.Verify(x => x.Collection, Times.Once);
+        _mockContext.Verify(x => x.Collection, Times.Exactly(4));
         _mockContext.Verify(x => x.Wantlist, Times.Once);
     }
 

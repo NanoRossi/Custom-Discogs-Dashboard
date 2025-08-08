@@ -2,7 +2,7 @@ import '../css/Header.css'
 
 const username = window._env_?.REACT_APP_USERNAME || "DefaultUser";
 
-function Header({ darkMode, setDarkMode }) {
+function Header({ darkMode, setDarkMode, setSavedDarkMode }) {
   return (
     <header>
       <div className="header-content">
@@ -13,7 +13,7 @@ function Header({ darkMode, setDarkMode }) {
             <input
               type="checkbox"
               checked={darkMode}
-              onChange={() => setDarkMode(!darkMode)}
+              onChange={() => [setDarkMode(!darkMode), setSavedDarkMode(!darkMode)]}
             />
             <span className="slider round"></span>
           </label>

@@ -25,7 +25,6 @@ export default function GetFact() {
             }
         };
 
-
         fetchFact();
 
         // Set up interval to call it every 30 seconds
@@ -39,7 +38,7 @@ export default function GetFact() {
     return (
         <div className="item-list-card">
             <h3 className="item-list-title">By The Numbers</h3>
-            <div className={`single-item-container visible`}>
+            <div className={`fact-container`}>
                 <div className={`fact-text-container fade ${fadeIn ? "visible" : ""} ${fadeOut ? "" : "visible"}`}>
                     <span>{fact}</span>
                 </div>

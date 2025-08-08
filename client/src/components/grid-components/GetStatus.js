@@ -47,6 +47,9 @@ export default function GetStatus() {
                 <span>{status.wantlistCount} on the wantlist</span><br />
                 <span>{status.genreCount} different genres</span><br />
                 <span>{status.styleCount} different styles</span><br />
+                <span>{status.vinylCount} Records</span><br />
+                <span>{status.cdCount} CDs</span><br />
+                <span>{status.cassetteCount} Cassettes</span><br />
             </div>
 
             <button onClick={(e) => { e.stopPropagation(); refreshData(); }} disabled={loading} className="fetch-button">
