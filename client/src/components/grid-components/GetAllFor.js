@@ -11,8 +11,6 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
         try {
             const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
             const res = await fetchWithTimeout(`${apiBaseUrl}/${textBoxApiCall}`, {}, 2000);
-
-            console.log(`Fetched options for ${title}:`, res);
             const data = await res.json();
 
             if (res.status === 200) {
