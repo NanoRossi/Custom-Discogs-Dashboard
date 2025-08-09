@@ -29,6 +29,12 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
             return result;
         }
 
+        if (!_dbChecker.ContainsData())
+        {
+            result.Error = new Exception("Database is empty");
+            return result;
+        }
+
         // ToList in the middle here is important to load the items into memory to then run SelectManyOn
         // SQL APPLY not supported on SQL Lite
         var artistNames = _discogsContext.Collection.AsNoTracking().ToList().SelectMany(x => x.ArtistName!).Distinct().Order();
@@ -51,6 +57,12 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
             return result;
         }
 
+        if (!_dbChecker.ContainsData())
+        {
+            result.Error = new Exception("Database is empty");
+            return result;
+        }
+
         var genres = _discogsContext.Genres.AsNoTracking().Select(x => x.Text!).Order();
 
         result.Result = [.. genres];
@@ -68,6 +80,12 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
         if (!_dbChecker.CanConnect())
         {
             result.Error = new Exception("Cannot connect to Database");
+            return result;
+        }
+
+        if (!_dbChecker.ContainsData())
+        {
+            result.Error = new Exception("Database is empty");
             return result;
         }
 
@@ -92,6 +110,12 @@ public class InfoService(DiscogsContext discogsContext, IDatabaseChecker dbCheck
         if (!_dbChecker.CanConnect())
         {
             result.Error = new Exception("Cannot connect to Database");
+            return result;
+        }
+
+        if (!_dbChecker.ContainsData())
+        {
+            result.Error = new Exception("Database is empty");
             return result;
         }
 

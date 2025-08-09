@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 export default function GetItem({ title, apiCall }) {
     const [item, setItem] = useState(null);
@@ -18,7 +19,7 @@ export default function GetItem({ title, apiCall }) {
 
         try {
             const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-            const res = await fetch(`${apiBaseUrl}/${apiCall}`);
+            const res = await fetchWithTimeout(`${apiBaseUrl}/${apiCall}`, {}, 2000);
             const data = await res.json();
             // Preload image
             const img = new Image();

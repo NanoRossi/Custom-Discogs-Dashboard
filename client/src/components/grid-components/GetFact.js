@@ -1,4 +1,5 @@
 import { useState, useEffect } from "react";
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 export default function GetFact() {
     const [fact, setFact] = useState(null);
@@ -14,7 +15,7 @@ export default function GetFact() {
 
             try {
                 const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-                const res = await fetch(`${apiBaseUrl}/api/info/fact`);
+                const res = await fetchWithTimeout(`${apiBaseUrl}/api/info/fact`, {}, 2000);
                 const data = await res.text();
 
                 setFact(data);

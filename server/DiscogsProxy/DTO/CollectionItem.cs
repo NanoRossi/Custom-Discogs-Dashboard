@@ -10,7 +10,14 @@ public class WantlistItem : Item;
 public class Item
 {
     /// <summary>
-    /// Id - Primary Key
+    /// ReleaseKey
+    /// This is the primary key for the collection item
+    /// </summary>
+    public int ReleaseKey { get; set; }
+
+    /// <summary>
+    /// Id - From Discogs
+    /// This is the Discogs Release ID
     /// </summary>
     public int Id { get; set; }
 

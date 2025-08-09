@@ -1,15 +1,16 @@
 import { useEffect, useState } from "react";
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 export default function GetStatus() {
     const [status, setStatus] = useState([]);
     const [loading, setLoading] = useState(false);
 
-
     useEffect(() => {
         const getStatus = async () => {
             try {
                 const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-                const res = await fetch(`${apiBaseUrl}/api/status`);
+                const res = await fetchWithTimeout(`${apiBaseUrl}/api/status`, {}, 2000);
+
                 const data = await res.json();
                 setStatus(data);
             } catch (err) {
@@ -25,7 +26,7 @@ export default function GetStatus() {
         setLoading(true);
         try {
             const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-            await fetch(`${apiBaseUrl}/api/import`);
+            await fetchWithTimeout(`${apiBaseUrl}/api/import`, {}, 20000);
             window.location.reload();
         } catch (err) {
             console.error(`Failed to refresh`, err);

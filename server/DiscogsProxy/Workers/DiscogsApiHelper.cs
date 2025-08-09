@@ -55,14 +55,10 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
     {
         var result = new ResultObject<List<T>>();
 
-        // We'll use a concurrent dictionary
-        // As that way we can avoid any duplicates by using the unique id as a key
-        ConcurrentDictionary<int, T> bag = new();
+        ConcurrentBag<T> bag = [];
 
         Parallel.ForEach(allItems, itemNode =>
         {
-            int id = itemNode.GetPropertyValue<int>("id");
-
             var artistsNode = itemNode.GetPropertyValue<JsonArray>("basic_information", "artists");
             List<string> artistNames = [];
 
@@ -73,7 +69,7 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
 
             var release = new T()
             {
-                Id = id,
+                Id = itemNode.GetPropertyValue<int>("id"),
                 ArtistName = artistNames,
                 ReleaseName = itemNode.GetPropertyValue<string>("basic_information", "title"),
                 ReleaseYear = itemNode.GetPropertyValue<int>("basic_information", "year"),
@@ -85,10 +81,10 @@ public class DiscogsApiHelper(IHttpClientFactory httpClientFactory, IConfigurati
                 FormatInfo = GetFormat(itemNode.GetPropertyValue<JsonArray>("basic_information", "formats")!)
             };
 
-            bag.TryAdd(id, release);
+            bag.Add(release);
         });
 
-        result.Result = [.. bag.Values];
+        result.Result = [.. bag];
 
         return result;
     }

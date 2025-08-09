@@ -20,6 +20,16 @@ public class DatabaseChecker(DiscogsContext context) : IDatabaseChecker
     /// </summary>
     /// <returns></returns>
     public bool CanConnect() => _context.Database.CanConnect();
+
+    /// <summary>
+    /// Check if the database contains any data
+    /// This lets us exit early if no data is present
+    /// </summary>
+    /// <returns></returns>
+    public bool ContainsData()
+    {
+        return _context.Collection.Any();
+    }
 }
 
 /// <summary>
@@ -34,4 +44,11 @@ public interface IDatabaseChecker
     /// </summary>
     /// <returns></returns>
     bool CanConnect();
+
+    /// <summary>
+    /// Check if the database contains any data
+    /// This lets us exit early if no data is present
+    /// </summary>
+    /// <returns></returns>
+    bool ContainsData();
 }

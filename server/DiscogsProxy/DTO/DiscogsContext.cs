@@ -28,7 +28,9 @@ public class DiscogsContext : DbContext
 
         modelBuilder.Entity<WantlistItem>(entity =>
         {
-            // FormatInfo is owned by CollectionItem
+            entity.HasKey(ci => ci.ReleaseKey);
+
+            // FormatInfo is owned by WantlistItem
             entity.OwnsOne(ci => ci.FormatInfo, fmt =>
             {
                 fmt.Property(f => f.FormatType);
@@ -48,6 +50,8 @@ public class DiscogsContext : DbContext
 
         modelBuilder.Entity<CollectionItem>(entity =>
         {
+            entity.HasKey(ci => ci.ReleaseKey);
+
             // FormatInfo is owned by CollectionItem
             entity.OwnsOne(ci => ci.FormatInfo, fmt =>
             {

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 export default function ListEntries({ title, apiCall }) {
     const [wantlist, setWantlist] = useState([]);
@@ -7,7 +8,7 @@ export default function ListEntries({ title, apiCall }) {
         const fetchData = async () => {
             try {
                 const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-                const res = await fetch(`${apiBaseUrl}/${apiCall}`);
+                const res = await fetchWithTimeout(`${apiBaseUrl}/${apiCall}`, {}, 2000);
                 const data = await res.json();
                 setWantlist(data);
             } catch (err) {

@@ -50,8 +50,8 @@ public class InfoServiceTests
         var result = _infoService.GetArtists();
 
         // Assert
-        result.HasError.ShouldBeFalse();
-        result.Result.ShouldBeEmpty();
+        result.HasError.ShouldBeTrue();
+        result.Error!.Message.ShouldBe("Database is empty");
     }
 
     [Fact]
@@ -66,6 +66,7 @@ public class InfoServiceTests
 
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
         _mockContext.Setup(x => x.Collection).ReturnsDbSet(data);
+        _mockDbChecker.Setup(x => x.ContainsData()).Returns(true);
 
         // Act
         var result = _infoService.GetArtists();
@@ -105,8 +106,8 @@ public class InfoServiceTests
         var result = _infoService.GetGenres();
 
         // Assert
-        result.HasError.ShouldBeFalse();
-        result.Result.ShouldBeEmpty();
+        result.HasError.ShouldBeTrue();
+        result.Error!.Message.ShouldBe("Database is empty");
     }
 
     [Fact]
@@ -122,6 +123,7 @@ public class InfoServiceTests
 
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
         _mockContext.Setup(x => x.Genres).ReturnsDbSet(data);
+        _mockDbChecker.Setup(x => x.ContainsData()).Returns(true);
 
         // Act
         var result = _infoService.GetGenres();
@@ -158,8 +160,8 @@ public class InfoServiceTests
         var result = _infoService.GetStyles();
 
         // Assert
-        result.HasError.ShouldBeFalse();
-        result.Result.ShouldBeEmpty();
+        result.HasError.ShouldBeTrue();
+        result.Error!.Message.ShouldBe("Database is empty");
     }
 
     [Fact]
@@ -175,6 +177,7 @@ public class InfoServiceTests
 
         _mockDbChecker.Setup(x => x.CanConnect()).Returns(true);
         _mockContext.Setup(x => x.Styles).ReturnsDbSet(data);
+        _mockDbChecker.Setup(x => x.ContainsData()).Returns(true);
 
         // Act
         var result = _infoService.GetStyles();

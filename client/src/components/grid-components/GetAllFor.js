@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { fetchWithTimeout } from '../utils/fetchWithTimeout';
 
 export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
     const [options, setOptions] = useState([]);
@@ -9,9 +10,14 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
     const fetchOptions = async () => {
         try {
             const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-            const res = await fetch(`${apiBaseUrl}/${textBoxApiCall}`);
+            const res = await fetchWithTimeout(`${apiBaseUrl}/${textBoxApiCall}`, {}, 2000);
+
+            console.log(`Fetched options for ${title}:`, res);
             const data = await res.json();
-            setOptions(data);
+
+            if (res.status === 200) {
+                setOptions(data);
+            }
         } catch (err) {
             console.error(`Failed to fetch ${title}s`, err);
         }
@@ -22,7 +28,7 @@ export default function ListEntries({ title, textBoxApiCall, listApiCall }) {
         setLoading(true);
         try {
             const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
-            const res = await fetch(`${apiBaseUrl}/${listApiCall}/${selected}`);
+            const res = await fetchWithTimeout(`${apiBaseUrl}/${listApiCall}/${selected}`, {}, 2000);
             const data = await res.json();
             setEntries(data);
         } catch (err) {
