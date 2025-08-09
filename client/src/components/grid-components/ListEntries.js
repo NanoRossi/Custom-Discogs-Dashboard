@@ -10,7 +10,10 @@ export default function ListEntries({ title, apiCall }) {
                 const apiBaseUrl = window._env_?.REACT_APP_API_BASE_URL || "http://localhost:8001";
                 const res = await fetchWithTimeout(`${apiBaseUrl}/${apiCall}`, {}, 2000);
                 const data = await res.json();
-                setWantlist(data);
+
+                if (res.status === 200) {
+                    setWantlist(data);
+                }
             } catch (err) {
                 console.error(`Failed to fetch ${title}`, err);
             }

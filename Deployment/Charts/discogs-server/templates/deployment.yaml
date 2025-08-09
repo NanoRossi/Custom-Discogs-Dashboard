@@ -42,13 +42,13 @@ spec:
               path: /api/status
               port: {{ .Values.service.port }}
             initialDelaySeconds: 5
-            periodSeconds: 60
+            periodSeconds: 10
           readinessProbe:
             httpGet:
               path: /api/status
               port: {{ .Values.service.port }}
             initialDelaySeconds: 5
-            periodSeconds: 60
+            periodSeconds: 10
       volumes:
         - name: config-volume
           configMap:
