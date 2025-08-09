@@ -6,11 +6,11 @@ This project involves a .NET 8 API backend paired with a React frontend to creat
 
 # Requirements
 
-1. .NET 8 SDK
-2. Node.js & npm
-3. Kubernetes (Minikube, Docker Desktop, etc.)
-4. kubectl, helm, and docker available in your terminal
-5. Powershell
+- .NET 8 SDK
+- Node.js & npm
+- Kubernetes (Minikube, Docker Desktop, etc.)
+- kubectl, helm, and docker available in your terminal
+- Powershell
 
 # Server
 
@@ -125,8 +125,8 @@ Run these commands to start the application in a development environment. The ap
 This is done to allow env injection at runtime, allowing for the app to be installed via Helm Chart.
 
 - Set env variables
-  - $env:REACT_APP_API_BASE_URL="http://localhost:8000"
-  - $env:REACT_APP_USERNAME="YourUsername"
+  - `$env:REACT_APP_API_BASE_URL="http://localhost:8000"`
+  - `$env:REACT_APP_USERNAME="YourUsername"`
 - `npm install`
 - `npm start`
 
@@ -213,8 +213,8 @@ ingress:
 
 ## NB
 
--The Server charts contain a PVC and PV in order to store the DB
--Both Server and Client will install their own Ingress records, this has been tested using Ingress-NGINX
+- The Server charts contain a PVC and PV in order to store the DB
+- Both Server and Client will install their own Ingress records, this has been tested using Ingress-NGINX
 
 ## Token Secret
 
@@ -228,15 +228,15 @@ You can customise the name of this, and update the matching name in the server v
 
 3 Scripts are included to assist with building the Docker images and deploying via Helm
 
-1. BuildAndDeployServer.ps1
+- BuildAndDeployServer.ps1
    - Builds the docker image for the server
    - Uninstalls any existing discogs-server deployment
    - Install discogs-server
-2. BuildAndDeployClient.ps1
+- BuildAndDeployClient.ps1
    - Builds the docker image for the client
    - Uninstalls any existing discogs-client deployment
    - Install discogs-client
-3. DeployWithToken.ps1
+- DeployWithToken.ps1
    - Creates the Kube secret from a passed in value
    - Runs scripts 1 and 2
 
