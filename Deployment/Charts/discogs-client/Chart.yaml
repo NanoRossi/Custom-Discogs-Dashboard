@@ -1,6 +1,6 @@
 apiVersion: v2
 name: discogs-client
-description: React frontend for Discogs app
+description: React frontend for Discogs Dashboard
 type: application
 version: 0.1.0
 appVersion: "1.0.0"
